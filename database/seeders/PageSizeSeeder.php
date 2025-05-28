@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\PageSize;
 use Illuminate\Database\Seeder;
 
 class PageSizeSeeder extends Seeder
@@ -12,6 +12,11 @@ class PageSizeSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $newPageSize = new PageSize();
+        $newPageSize->pageSizeName = 'Demo Page Size';
+        $newPageSize->width = 8.3;
+        $newPageSize->height = 11.7;
+        $newPageSize->unit = 'inches';
+        $newPageSize->save();
     }
 }
