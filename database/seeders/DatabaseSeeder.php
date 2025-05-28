@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+//use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\CourierMedium;
+use App\Models\CustomerPermissions;
+use Faker\Provider\ar_EG\Payment;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +16,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            RoleSeeder::class,
+            awardSeeder::class,
+            ShiftSeeder::class,
+            EmploymentStatusSeeder::class,
+            DesignationSeeder::class,
+            DepartmentSeeder::class,
+            UserSeeder::class,
+            PermissionSeeder::class,
+            RolePermissionSeeder::class,
+            CurrencySeeder::class,
+            AppSettingSeeder::class,
+            AccountSeeder::class,
+            SubAccountSeeder::class,
+            EmailConfigSeeder::class,
+            ProductCategorySeeder::class,
+            ProductSubCategorySeeder::class,
+            UoMSeeder::class,
+            customerSeeder::class,
+            ProductBrandSeeder::class,
+            ProductVatSeeder::class,
+            ProductSeeder::class,
+            ColorsSeeder::class,
+            ProductColorSeeder::class,
+            SupplierSeeder::class,
+            PageSizeSeeder::class,
+            ecomSeeder::class,
+            ProductAttributeSeeder::class,
+            ProductAttributeValueSeeder::class,
+            DiscountSeeder::class,
+            PaymentMethodSeeder::class,
+            DeliveryFeeSeeder::class,
         ]);
     }
 }
