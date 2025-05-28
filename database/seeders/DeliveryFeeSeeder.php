@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\DeliveryFee;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DeliveryFeeSeeder extends Seeder
 {
@@ -12,6 +13,11 @@ class DeliveryFeeSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+
+        $deliveryFee = new DeliveryFee();
+        $deliveryFee->deliveryArea = 'Demo Area';
+        $deliveryFee->deliveryFee = 50;
+        $deliveryFee->save();
+
     }
 }
