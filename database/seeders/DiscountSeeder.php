@@ -12,6 +12,29 @@ class DiscountSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+
+        $discounts = [
+            [
+                'value' => '10',
+                'type' => 'percentage',
+                'status' => 'true',
+                'startDate' => '2023-09-10',
+                'endDate' => '2023-10-10',
+            ],
+            [
+                'value' => '20',
+                'type' => 'flat',
+                'status' => 'true',
+                'startDate' => '2023-09-10',
+                'endDate' => '2023-10-10',
+            ]
+
+
+
+        ];
+
+        foreach ($discounts as $discount) {
+            \App\Models\Discount::create($discount);
+        }
     }
 }
