@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\ProductAttribute;
+use App\Models\ProductAttributeValue;
 use Illuminate\Database\Seeder;
 
 class ProductAttributeValueSeeder extends Seeder
@@ -12,6 +14,11 @@ class ProductAttributeValueSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $productAttributeValue = new ProductAttributeValue();
+        $productAttributeValue->productAttributeId = 1;
+        $productAttributeValue->name = 'Demo Attribute Value';
+        $productAttributeValue->save();
+
+
     }
 }
