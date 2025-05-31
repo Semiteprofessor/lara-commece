@@ -9,4 +9,17 @@ class ShippingCharge extends Model
 {
     /** @use HasFactory<\Database\Factories\ShippingChargeFactory> */
     use HasFactory;
+
+    protected $table = 'shippingCharge';
+
+    protected $fillable = [
+        'productId',
+        'Destination',
+        'charge',
+    ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'productId');
+    }
 }
