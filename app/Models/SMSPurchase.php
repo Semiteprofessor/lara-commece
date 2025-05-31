@@ -9,4 +9,11 @@ class SMSPurchase extends Model
 {
     /** @use HasFactory<\Database\Factories\SMSPurchaseFactory> */
     use HasFactory;
+
+    protected $table = 'smsPurchase';
+
+    protected $fillable = [
+        'purchaseTotal',
+        'sendTotal',
+    ];
 }
