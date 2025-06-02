@@ -11,42 +11,20 @@ class ReturnCartOrderAttributeValue extends Model
 {
     /** @use HasFactory<\Database\Factories\ReturnCartOrderAttributeValueFactory> */
     use HasFactory;
+    protected $table = 'returnCartOrderAttributeValue';
     protected $primaryKey = 'id';
-    protected $table = 'returnCartOrderProduct';
     protected $fillable = [
-        'productId',
-        'cartOrderProductId',
-        'returnCartOrderId',
-        'colorId',
-        'productQuantity',
-        'productSalePrice',
-        'productVat',
-        'discountType',
-        'discount',
+        'returnCartOrderProductId',
+        'productAttributeValueId',
     ];
 
-    public function returnCartOrder(): BelongsTo
+    public function returnCartOrderProduct(): BelongsTo
     {
-        return $this->belongsTo(ReturnCartOrder::class, 'returnCartOrderId');
+        return $this->belongsTo(ReturnCartOrderProduct::class, 'returnCartOrderProductId');
     }
 
-    public function product(): BelongsTo
+    public function productAttributeValue(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'productId');
-    }
-
-    public function cartOrderProduct(): BelongsTo
-    {
-        return $this->belongsTo(CartOrderProduct::class, 'cartOrderProductId');
-    }
-
-    public function colors(): BelongsTo
-    {
-        return $this->belongsTo(Colors::class, 'colorId');
-    }
-
-    public function returnCartOrderAttributeValue(): HasMany
-    {
-        return $this->hasMany(ReturnCartOrderAttributeValue::class, 'returnCartOrderProductId');
+        return $this->belongsTo(ProductAttributeValue::class, 'productAttributeValueId');
     }
 }
