@@ -9,4 +9,10 @@ class Permission extends Model
 {
     /** @use HasFactory<\Database\Factories\PermissionFactory> */
     use HasFactory;
+
+    protected $table = 'permission';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'name',
+    ];
 }
