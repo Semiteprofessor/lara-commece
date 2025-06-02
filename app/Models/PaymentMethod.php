@@ -9,4 +9,20 @@ class PaymentMethod extends Model
 {
     /** @use HasFactory<\Database\Factories\PaymentMethodFactory> */
     use HasFactory;
+
+
+    protected $table = 'paymentMethod';
+
+    protected $fillable = [
+        'methodName',
+        'subAccountId',
+        'logo',
+        'ownerAccount',
+        'instruction',
+    ];
+
+    public function subAccount()
+    {
+        return $this->belongsTo(SubAccount::class, 'subAccountId');
+    }
 }

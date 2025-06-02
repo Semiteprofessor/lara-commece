@@ -9,4 +9,12 @@ class PasswordResetToken extends Model
 {
     /** @use HasFactory<\Database\Factories\PasswordResetTokenFactory> */
     use HasFactory;
+
+    protected $table = 'PasswordResetToken';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'userId',
+        'token',
+        'experiresAt',
+    ];
 }
