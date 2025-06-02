@@ -9,4 +9,10 @@ class Manufacturer extends Model
 {
     /** @use HasFactory<\Database\Factories\ManufacturerFactory> */
     use HasFactory;
+
+    protected $table = 'manufacturer';
+
+    protected $fillable = [
+        'name'
+    ];
 }

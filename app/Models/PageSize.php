@@ -9,4 +9,12 @@ class PageSize extends Model
 {
     /** @use HasFactory<\Database\Factories\PageSizeFactory> */
     use HasFactory;
+    protected $table = 'pageSize';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'pageSizeName',
+        'width',
+        'height',
+        'unit',
+    ];
 }
