@@ -9,4 +9,15 @@ class ProductSubCategory extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductSubCategoryFactory> */
     use HasFactory;
+
+    protected $table = "productVariant";
+    protected $primaryKey = "id";
+    protected $fillable = [
+        'manufacturerId',
+        'productBrandId',
+        'subCategoryId',
+        'purchaseTaxId',
+        'salesTaxId',
+        'uomId'
+    ];
 }
