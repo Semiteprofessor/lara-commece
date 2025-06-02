@@ -9,4 +9,14 @@ class ProductAttribute extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductAttributeFactory> */
     use HasFactory;
+    protected $table = 'productAttribute';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'name',
+    ];
+
+    public function productAttributeValue()
+    {
+        return $this->hasMany(ProductAttributeValue::class, 'productAttributeId');
+    }
 }
