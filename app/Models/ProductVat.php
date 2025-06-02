@@ -4,26 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductVat extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductVatFactory> */
     use HasFactory;
-
-    public $table = 'productWishlist';
-
+    protected $table = 'productVat';
+    protected $primaryKey = 'id';
     protected $fillable = [
-        'wishlistId',
-        'productId',
+        'title',
+        'percentage',
+        'status',
     ];
 
-    public function wishlist()
+    public function product(): HasMany
     {
-        return $this->belongsTo(Wishlist::class, 'wishlistId');
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'productId');
+        return $this->hasMany(Product::class, 'productVatId');
     }
 }

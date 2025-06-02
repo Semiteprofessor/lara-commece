@@ -4,20 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductSubCategory extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductSubCategoryFactory> */
     use HasFactory;
-
-    protected $table = "productVariant";
-    protected $primaryKey = "id";
+    protected $table = 'productSubCategory';
+    protected $primaryKey = 'id';
     protected $fillable = [
-        'manufacturerId',
-        'productBrandId',
-        'subCategoryId',
-        'purchaseTaxId',
-        'salesTaxId',
-        'uomId'
+        'name',
+        'productCategoryId',
     ];
+
+    public function productCategory(): BelongsTo
+    {
+        return $this->belongsTo(ProductCategory::class, 'productCategoryId');
+    }
+
+    public function product(): HasMany
+    {
+        return $this->hasMany(Product::class, 'productSubCategoryId');
+    }
 }

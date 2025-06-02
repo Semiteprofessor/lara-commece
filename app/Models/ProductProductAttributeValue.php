@@ -11,20 +11,21 @@ class ProductProductAttributeValue extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductProductAttributeValueFactory> */
     use HasFactory;
-    protected $table = 'productSubCategory';
+
+    protected $table = 'productProductAttributeValue';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'name',
-        'productCategoryId',
+        'productId',
+        'productAttributeValueId',
     ];
 
-    public function productCategory(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(ProductCategory::class, 'productCategoryId');
+        return $this->belongsTo(Product::class, 'productId');
     }
 
-    public function product(): HasMany
+    public function productAttributeValue(): BelongsTo
     {
-        return $this->hasMany(Product::class, 'productSubCategoryId');
+        return $this->belongsTo(ProductAttributeValue::class, 'productAttributeValueId');
     }
 }
