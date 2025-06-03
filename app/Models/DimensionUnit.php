@@ -9,4 +9,10 @@ class DimensionUnit extends Model
 {
     /** @use HasFactory<\Database\Factories\DimensionUnitFactory> */
     use HasFactory;
+
+    protected $table = 'dimensionUnit';
+
+    protected $fillable = [
+        'name'
+    ];
 }
