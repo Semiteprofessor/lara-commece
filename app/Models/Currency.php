@@ -9,4 +9,16 @@ class Currency extends Model
 {
     /** @use HasFactory<\Database\Factories\CurrencyFactory> */
     use HasFactory;
+
+    public $table = 'currency';
+
+    protected $fillable = [
+        'currencyName',
+        'currencySymbol',
+    ];
+
+    public function appSetting()
+    {
+        return $this->hasOne(AppSetting::class, 'currencyId');
+    }
 }
