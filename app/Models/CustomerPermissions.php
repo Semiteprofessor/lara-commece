@@ -9,4 +9,10 @@ class CustomerPermissions extends Model
 {
     /** @use HasFactory<\Database\Factories\CustomerPermissionsFactory> */
     use HasFactory;
+    protected $table = 'customerPermissions';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'user',
+        'permissions',
+    ];
 }
