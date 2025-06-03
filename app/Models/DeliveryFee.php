@@ -9,4 +9,11 @@ class DeliveryFee extends Model
 {
     /** @use HasFactory<\Database\Factories\DeliveryFeeFactory> */
     use HasFactory;
+
+    protected $table = 'deliveryFee';
+
+    protected $fillable = [
+        'deliveryArea',
+        'deliveryFee',
+    ];
 }
