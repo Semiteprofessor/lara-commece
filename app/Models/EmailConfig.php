@@ -9,4 +9,13 @@ class EmailConfig extends Model
 {
     /** @use HasFactory<\Database\Factories\EmailConfigFactory> */
     use HasFactory;
+    protected $table = 'emailConfig';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'emailConfigName',
+        'emailHost',
+        'emailPort',
+        'emailUser',
+        'emailPass',
+    ];
 }
