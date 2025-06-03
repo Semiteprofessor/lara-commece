@@ -9,4 +9,14 @@ class Coupon extends Model
 {
     /** @use HasFactory<\Database\Factories\CouponFactory> */
     use HasFactory;
+
+    protected $table = 'coupon';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'couponCode',
+        'type',
+        'startDate',
+        'endDate',
+        'value'
+    ];
 }
