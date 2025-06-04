@@ -9,4 +9,17 @@ class Bcc extends Model
 {
     /** @use HasFactory<\Database\Factories\BccFactory> */
     use HasFactory;
+    protected $table = 'bcc';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'emailId',
+        'crmEmailId',
+        'bccEmail',
+        'status',
+    ];
+
+    public function email()
+    {
+        return $this->belongsTo(Email::class, 'emailId', 'id');
+    }
 }
