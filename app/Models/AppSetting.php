@@ -9,4 +9,23 @@ class AppSetting extends Model
 {
     /** @use HasFactory<\Database\Factories\AppSettingFactory> */
     use HasFactory;
+    protected $table = 'appSetting';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'companyName',
+        'dashboardType',
+        'tagLine',
+        'address',
+        'phone',
+        'email',
+        'website',
+        'footer',
+        'logo',
+        'currencyId',
+    ];
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currencyId');
+    }
 }
