@@ -9,4 +9,12 @@ class Announcement extends Model
 {
     /** @use HasFactory<\Database\Factories\AnnouncementFactory> */
     use HasFactory;
+
+    protected $table = 'announcement';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'title',
+        'description',
+        'status',
+    ];
 }
