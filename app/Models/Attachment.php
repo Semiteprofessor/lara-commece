@@ -9,4 +9,17 @@ class Attachment extends Model
 {
     /** @use HasFactory<\Database\Factories\AttachmentFactory> */
     use HasFactory;
+
+    protected $table = 'attachment';
+    protected $primaryKey = 'id';
+
+    protected $fillable = [
+        'emailId',
+        'name',
+    ];
+
+    public function email()
+    {
+        return $this->belongsTo(Email::class, 'emailId');
+    }
 }
