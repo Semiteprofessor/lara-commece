@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('delivery_fees', function (Blueprint $table) {
+        Schema::create('deliveryFee', function (Blueprint $table) {
             $table->id();
+            $table->string('deliveryArea');
+            $table->double('deliveryFee');
+            $table->string('status')->default('true');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('delivery_fees');
+        Schema::dropIfExists('deliveryFee');
     }
 };
