@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('s_m_s_purchases', function (Blueprint $table) {
+        Schema::create('smsPurchase', function (Blueprint $table) {
             $table->id();
+            $table->string('purchaseTotal');
+            $table->string('sendTotal')->nullable()->default(0);
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('s_m_s_purchases');
+        Schema::dropIfExists('smsPurchase');
     }
 };
