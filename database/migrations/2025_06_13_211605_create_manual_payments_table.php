@@ -11,9 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('manual_payments', function (Blueprint $table) {
+        Schema::create('manualPayment', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger("paymentMethodId");
+            $table->unsignedBigInteger("customerId");
+            $table->uuid("cartOrderId");
+            $table->string("amount");
+            $table->string("manualTransactionId")->unique()->nullable();
+            $table->string("CustomerAccount")->nullable();
+            $table->string("CustomerTransactionId")->nullable();
+            $table->enum("isVerified",['Accept','Reject','Pending'])->default("Pending");
+            $table->string("status")->default("true");
             $table->timestamps();
+
+            $table->foreign("customerId")->references("id")->on("customer");
+            $table->foreign("cartOrderId")->references("id")->on("cartOrder");
+            $table->foreign("paymentMethodId")->references("id")->on("paymentMethod");
         });
     }
 
@@ -22,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('manual_payments');
+        Schema::dropIfExists('manualPayment');
     }
 };
