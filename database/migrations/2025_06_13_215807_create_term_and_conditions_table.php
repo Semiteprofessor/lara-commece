@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('term_and_conditions', function (Blueprint $table) {
+        Schema::create('termsAndCondition', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->longText('subject');
+            $table->string('status')->default('true');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('term_and_conditions');
+        Schema::dropIfExists('termsAndCondition');
     }
 };
