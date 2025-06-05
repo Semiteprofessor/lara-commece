@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attachments', function (Blueprint $table) {
+        Schema::create('attachment', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('emailId');
+            $table->string('name');
             $table->timestamps();
+
+            $table->foreign('emailId')->references('id')->on('email')->onDelete('cascade');
         });
     }
 
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attachments');
+        Schema::dropIfExists('attachment');
     }
 };
