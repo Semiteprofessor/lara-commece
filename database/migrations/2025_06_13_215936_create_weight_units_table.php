@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('weightUnit', function (Blueprint $table) {
+        Schema::create('productVariant', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->unsignedBigInteger('manufacturerId');
+            $table->unsignedBigInteger('productBrandId');
+            $table->unsignedBigInteger('subCategoryId');
+            $table->unsignedBigInteger('purchaseTaxId');
+            $table->unsignedBigInteger('salesTaxId');
+            $table->unsignedBigInteger('uomId');
             $table->string('status')->default('true');
             $table->timestamps();
         });
@@ -24,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('weightUnit');
+        Schema::dropIfExists('productVariant');
     }
 };
