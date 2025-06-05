@@ -11,9 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('return_cart_orders', function (Blueprint $table) {
+        Schema::create('returnCartOrder', function (Blueprint $table) {
             $table->id();
+            $table->uuid('cartOrderId');
+            $table->dateTime('date');
+            $table->double('totalAmount');
+            $table->double('totalVatAmount')->nullable();
+            $table->double('totalDiscountAmount')->nullable();
+            $table->text('note')->nullable();
+            $table->double('couponAmount')->nullable();
+            $table->enum('returnType', ['PRODUCT', 'REFUND']);
+            $table->enum('returnCartOrderStatus', ['PENDING', 'RECEIVED', 'REFUNDED', 'RESEND', 'RESENDED', 'REJECTED'])->default('PENDING');
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            $table->foreign('cartOrderId')->references('id')->on('cartOrder')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -22,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('return_cart_orders');
+        Schema::dropIfExists('returnCartOrder');
     }
 };
