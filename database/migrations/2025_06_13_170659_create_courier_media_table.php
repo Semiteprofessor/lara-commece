@@ -11,9 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('courier_media', function (Blueprint $table) {
+        Schema::create('courierMedium', function (Blueprint $table) {
             $table->id();
+            $table->string('courierMediumName')->unique();
+            $table->string('address');
+            $table->string('phone')->unique();
+            $table->string('email')->unique();
+            $table->enum('type', ['courier', 'deliveryBoy']);
+            $table->unsignedBigInteger('subAccountId')->nullable();
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            $table->foreign('subAccountId')->references('id')->on('subAccount');
         });
     }
 
@@ -22,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('courier_media');
+        Schema::dropIfExists('courierMedium');
     }
 };
