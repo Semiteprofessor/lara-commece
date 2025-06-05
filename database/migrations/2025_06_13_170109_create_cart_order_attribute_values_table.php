@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cart_order_attribute_values', function (Blueprint $table) {
+        Schema::create('cartOrderAttributeValue', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('cartOrderProductId');
+            $table->unsignedBigInteger('productAttributeValueId');
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            $table->foreign('cartOrderProductId')->references('id')->on('cartOrderProduct');
+            $table->foreign('productAttributeValueId')->references('id')->on('productAttributeValue');
         });
     }
 
@@ -22,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cart_order_attribute_values');
+        Schema::dropIfExists('cartOrderAttributeValue');
     }
 };
