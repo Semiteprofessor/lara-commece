@@ -11,9 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('delivery_challans', function (Blueprint $table) {
+        Schema::create('deliveryChallan', function (Blueprint $table) {
             $table->id();
+            $table->uuid('saleInvoiceId');
+            $table->string('challanNo')->unique();
+            $table->string('challanDate');
+            $table->string('challanNote');
+            $table->string('vehicleNo');
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            $table->foreign('saleInvoiceId')->references('id')->on('saleInvoice')->onDelete('cascade');
         });
     }
 
@@ -22,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('delivery_challans');
+        Schema::dropIfExists('deliveryChallan');
     }
 };
