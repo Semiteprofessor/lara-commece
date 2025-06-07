@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cart_attribute_values', function (Blueprint $table) {
+        Schema::create('cartAttributeValue', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('cartProductId');
+            $table->unsignedBigInteger('productAttributeValueId');
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            $table->foreign('cartProductId')->references('id')->on('cartProduct');
+            $table->foreign('productAttributeValueId')->references('id')->on('productAttributeValue');
         });
     }
 
@@ -22,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cart_attribute_values');
+        Schema::dropIfExists('cart_attribute_value');
     }
 };
