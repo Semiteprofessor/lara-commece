@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
+        Schema::create('PasswordResetToken', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('userId');
+            $table->string('token')->unique();
+            $table->timestamp('experiresAt');
             $table->timestamps();
+
+            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('PasswordResetToken');
     }
 };
