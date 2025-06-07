@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wishlists', function (Blueprint $table) {
+        Schema::create('wishlist', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('customerId');
+            $table->string('status')->default('true');
             $table->timestamps();
+
+
+            $table->foreign('customerId')->references('id')->on('customer');
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wishlists');
+        Schema::dropIfExists('wishlist');
     }
 };
