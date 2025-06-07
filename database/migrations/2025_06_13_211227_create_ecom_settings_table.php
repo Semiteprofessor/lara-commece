@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ecom_settings', function (Blueprint $table) {
+        Schema::create('ecom_setting', function (Blueprint $table) {
             $table->id();
+            $table->string('IsActive')->default('true');
             $table->timestamps();
         });
     }
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ecom_settings');
+        Schema::dropIfExists('ecom_setting');
     }
 };
