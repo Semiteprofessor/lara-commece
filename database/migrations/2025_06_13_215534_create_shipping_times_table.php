@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shipping_times', function (Blueprint $table) {
+        Schema::create('shippingTime', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('productId');
+            $table->string('Destination')->nullable();
+            $table->string('EstimatedTimeDays')->nullable();
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            $table->foreign('productId')->references('id')->on('product')->onDelete('cascade');
         });
     }
 
@@ -22,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shipping_times');
+        Schema::dropIfExists('shipping_time');
     }
 };
