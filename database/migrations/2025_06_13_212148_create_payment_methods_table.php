@@ -11,9 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_methods', function (Blueprint $table) {
+        Schema::create('paymentMethod', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('subAccountId');
+            $table->string('methodName');
+            $table->string('logo')->nullable();
+            $table->string('ownerAccount')->nullable();
+            $table->longText('instruction')->nullable();
+            $table->string('isActive')->default('true');
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            $table->foreign('subAccountId')->references('id')->on('subAccount');
         });
     }
 
@@ -22,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_methods');
+        Schema::dropIfExists('paymentMethod');
     }
 };
