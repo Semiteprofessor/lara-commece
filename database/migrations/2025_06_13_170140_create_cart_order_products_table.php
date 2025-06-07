@@ -11,9 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cart_order_products', function (Blueprint $table) {
+        Schema::create('cartOrderProduct', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('productId');
+            $table->uuid('invoiceId');
+            $table->unsignedBigInteger('colorId')->nullable();
+            $table->integer('productQuantity');
+            $table->double('productSalePrice');
+            $table->integer('productVat')->nullable();
+            $table->string('discountType')->nullable();
+            $table->integer('discount')->nullable();
             $table->timestamps();
+
+            $table->foreign('productId')->references('id')->on('product');
+            $table->foreign('invoiceId')->references('id')->on('cartOrder')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('colorId')->references('id')->on('colors');
         });
     }
 
@@ -22,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cart_order_products');
+        Schema::dropIfExists('cartOrderProduct');
     }
 };
