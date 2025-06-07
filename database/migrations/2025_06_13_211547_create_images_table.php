@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('productId')->nullable();
+            $table->unsignedBigInteger('reviewId')->nullable();
+            $table->string('imageName');
+            $table->string('status')->default("true");
             $table->timestamps();
+
+            // foreign key constraints and relation
+            $table->foreign('productId')->references('id')->on('product');
+            $table->foreign('reviewId')->references('id')->on('reviewRating');
         });
     }
 
