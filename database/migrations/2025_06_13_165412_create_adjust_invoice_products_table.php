@@ -11,9 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('adjust_invoice_products', function (Blueprint $table) {
+        Schema::create('adjustInvoiceProduct', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('adjustInvoiceId');
+            $table->unsignedBigInteger('productId')->nullable();
+            $table->integer('adjustQuantity');
+            $table->string('adjustType')->nullable();
             $table->timestamps();
+
+            $table->foreign('adjustInvoiceId')->references('id')->on('adjustInvoice');
+            $table->foreign('productId')->references('id')->on('product');
         });
     }
 
@@ -22,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('adjust_invoice_products');
+        Schema::dropIfExists('adjustInvoiceProduct');
     }
 };
