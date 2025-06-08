@@ -11,9 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchase_reorder_invoices', function (Blueprint $table) {
+        Schema::create('purchaseReorderInvoice', function (Blueprint $table) {
             $table->id();
+            $table->string('reorderInvoiceId');
+            $table->unsignedBigInteger('productId');
+            $table->integer('productQuantity');
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            // foreign key constraints
+            $table->foreign('productId')->references('id')->on('product');
         });
     }
 
@@ -22,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchase_reorder_invoices');
+        Schema::dropIfExists('purchaseReorderInvoice');
     }
 };
