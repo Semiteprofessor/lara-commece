@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_invoice_vats', function (Blueprint $table) {
+        Schema::create('saleInvoiceVat', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('invoiceId');
+            $table->unsignedBigInteger('productVatId');
             $table->timestamps();
+
+            // $table->foreign('invoiceId')->references('id')->on('saleInvoice')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('productVatId')->references('id')->on('productVat');
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sale_invoice_vats');
+        Schema::dropIfExists('saleInvoiceVat');
     }
 };
