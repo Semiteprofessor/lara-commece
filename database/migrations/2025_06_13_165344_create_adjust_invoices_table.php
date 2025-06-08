@@ -11,9 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('adjust_invoices', function (Blueprint $table) {
+        Schema::create('adjustInvoice', function (Blueprint $table) {
             $table->id();
+            $table->string('note')->nullable();
+            $table->unsignedBigInteger('userId');
+            $table->dateTime('date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
+        });
+
+        // Add the foreign key
+        Schema::table('adjustInvoice', function (Blueprint $table) {
+            $table->foreign('userId')->references('id')->on('users');
         });
     }
 
@@ -22,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('adjust_invoices');
+        Schema::dropIfExists('adjustInvoice');
     }
 };
