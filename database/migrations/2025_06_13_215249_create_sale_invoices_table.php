@@ -11,9 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_invoices', function (Blueprint $table) {
-            $table->id();
+        Schema::create('saleInvoice', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->dateTime('date');
+            $table->string('invoiceMemoNo')->nullable();
+            $table->double('totalAmount');
+            $table->double('totalTaxAmount');
+            $table->double('totalDiscountAmount');
+            $table->double('paidAmount');
+            $table->double('dueAmount');
+            $table->double('profit');
+            $table->dateTime('dueDate')->nullable();
+            $table->longText('termsAndConditions')->nullable();
+            $table->unsignedBigInteger('customerId');
+            $table->unsignedBigInteger('userId');
+            $table->string('note')->nullable();
+            $table->string('address')->nullable();
+            $table->enum('orderStatus', ['PENDING', 'RECEIVED'])->default('PENDING');
+            $table->string('isHold')->default('false');
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            // foreign key
+            $table->foreign('customerId')->references('id')->on('customer')->onDelete('cascade');
+            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -22,6 +43,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sale_invoices');
+        Schema::dropIfExists('saleInvoice');
     }
 };
