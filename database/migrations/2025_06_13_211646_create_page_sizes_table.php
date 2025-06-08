@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('page_sizes', function (Blueprint $table) {
+        Schema::create('pageSize', function (Blueprint $table) {
             $table->id();
+            $table->string('pageSizeName');
+            $table->double('width', 8, 2);
+            $table->double('height', 8, 2);
+            $table->string('unit')->default('inches');
+            $table->string('status')->default('true');
             $table->timestamps();
         });
     }
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('page_sizes');
+        Schema::dropIfExists('pageSize');
     }
 };
