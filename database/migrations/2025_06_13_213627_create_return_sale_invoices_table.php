@@ -11,9 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('return_sale_invoices', function (Blueprint $table) {
-            $table->id();
+        Schema::create('returnSaleInvoice', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->dateTime('date');
+            $table->double('totalAmount');
+            $table->double('instantReturnAmount')->default(0);
+            $table->double('tax')->nullable();
+            $table->string('note')->nullable();
+            $table->uuid('saleInvoiceId');
+            $table->string('invoiceMemoNo')->nullable();
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            $table->foreign('saleInvoiceId')->references('id')->on('saleInvoice');
         });
     }
 
@@ -22,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('return_sale_invoices');
+        Schema::dropIfExists('returnSaleInvoice');
     }
 };
