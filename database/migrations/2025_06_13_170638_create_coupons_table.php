@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('coupons', function (Blueprint $table) {
+        Schema::create('coupon', function (Blueprint $table) {
             $table->id();
+            $table->string('couponCode')->nullable();
+            $table->enum('type', ['flat', 'percentage'])->default('percentage');
+            $table->double('value');
+            $table->dateTime('startDate');
+            $table->dateTime('endDate');
+            $table->string('status')->default('true');
             $table->timestamps();
         });
     }
@@ -22,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('coupons');
+        Schema::dropIfExists('coupon');
     }
 };
