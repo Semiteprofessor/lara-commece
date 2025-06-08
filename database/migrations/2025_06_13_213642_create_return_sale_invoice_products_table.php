@@ -11,9 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('return_sale_invoice_products', function (Blueprint $table) {
+        Schema::create('returnSaleInvoiceProduct', function (Blueprint $table) {
             $table->id();
+            $table->uuid('invoiceId');
+            $table->unsignedBigInteger('productId')->nullable();
+            $table->unsignedBigInteger('saleInvoiceProductId')->nullable();
+            $table->integer('productQuantity');
+            $table->double('productUnitSalePrice');
+            $table->double('productFinalAmount');
+            $table->double('tax');
+            $table->double('taxAmount');
             $table->timestamps();
+
+            // foreign key relation constraints
+            $table->foreign('invoiceId')->references('id')->on('returnSaleInvoice')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('productId')->references('id')->on('product');
+            $table->foreign('saleInvoiceProductId')->references('id')->on('saleInvoiceProduct');
         });
     }
 
@@ -22,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('return_sale_invoice_products');
+        Schema::dropIfExists('returnSaleInvoiceProduct');
     }
 };
