@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_permissions', function (Blueprint $table) {
+        Schema::create('customerPermissions', function (Blueprint $table) {
             $table->id();
+            $table->string('user');
+            $table->string('permissions');
+            $table->string('status')->default('true');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customer_permissions');
+        Schema::dropIfExists('customerPermissions');
     }
 };
