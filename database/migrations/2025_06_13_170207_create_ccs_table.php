@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ccs', function (Blueprint $table) {
+        Schema::create('cc', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('emailId')->nullable();
+            $table->string('ccEmail');
+            $table->string('status')->default("true");
             $table->timestamps();
+
+            $table->foreign('emailId')->references('id')->on('email')->onDelete('cascade');
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ccs');
+        Schema::dropIfExists('cc');
     }
 };
