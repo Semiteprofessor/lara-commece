@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Esucation extends Model
+class EmailConfig extends Model
 {
-    /** @use HasFactory<\Database\Factories\EsucationFactory> */
+    /** @use HasFactory<\Database\Factories\EmailConfigFactory> */
     use HasFactory;
 }
