@@ -13,11 +13,6 @@ return new class extends Migration
     {
         Schema::create('shift', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->time('startTime');
-            $table->time('endTime');
-            $table->double('workHour')->nullable();
-            $table->string('status')->default("true");
             $table->timestamps();
         });
     }
