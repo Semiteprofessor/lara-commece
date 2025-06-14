@@ -11,9 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('app_settings', function (Blueprint $table) {
+        Schema::create('appSetting', function (Blueprint $table) {
             $table->id();
+            $table->string('companyName');
+            $table->enum('dashboardType', ['e-commerce', 'inventory', 'both']);
+            $table->string('tagLine');
+            $table->string('address');
+            $table->string('phone');
+            $table->string('email');
+            $table->string('website');
+            $table->string('footer');
+            $table->string('logo')->nullable();
+            $table->unsignedBigInteger('currencyId')->default(1);
             $table->timestamps();
+
+            $table->foreign('currencyId')->references('id')->on('currency');
         });
     }
 
@@ -22,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('app_settings');
+        Schema::dropIfExists('appSetting');
     }
 };
