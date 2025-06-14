@@ -11,9 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quotes', function (Blueprint $table) {
+        Schema::create('quote', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('quoteOwnerId');
+            $table->string('quoteName');
+            $table->dateTime('quoteDate')->nullable();
+            $table->dateTime('expirationDate')->nullable();
+            $table->longText('termsAndConditions')->nullable();
+            $table->longText('description')->nullable();
+            $table->float('discount')->nullable();
+            $table->float('totalAmount')->nullable();
+            $table->string('status')->default("true");
             $table->timestamps();
+
+            $table->foreign('quoteOwnerId')->references('id')->on('users');
         });
     }
 
@@ -22,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quotes');
+        Schema::dropIfExists('quote');
     }
 };
