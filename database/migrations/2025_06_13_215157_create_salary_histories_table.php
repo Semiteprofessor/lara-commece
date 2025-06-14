@@ -11,9 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('salary_histories', function (Blueprint $table) {
+        Schema::create('salaryHistory', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('userId');
+            $table->float('salary');
+            $table->dateTime('startDate');
+            $table->dateTime('endDate')->nullable();
+            $table->string('comment')->nullable();
+            $table->string('status')->default("true");
             $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('userId')->references('id')->on('users');
         });
     }
 
@@ -22,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('salary_histories');
+        Schema::dropIfExists('salaryHistory');
     }
 };
