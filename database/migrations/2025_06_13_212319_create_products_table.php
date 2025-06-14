@@ -11,9 +11,33 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('product', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->string('productThumbnailImage')->nullable();
+            $table->unsignedBigInteger('productSubCategoryId')->nullable();
+            $table->unsignedBigInteger('productBrandId')->nullable();
+            $table->longText('description')->nullable();
+            $table->string('sku')->unique();
+            $table->integer('productQuantity')->nullable();
+            $table->double('productSalePrice')->nullable();
+            $table->double('productPurchasePrice')->nullable();
+            $table->unsignedBigInteger('uomId')->nullable();
+            $table->double('uomValue')->nullable();
+            $table->integer('reorderQuantity')->nullable();
+            $table->unsignedBigInteger('productVatId')->nullable();
+            $table->string('shippingChargeComment')->nullable();
+            $table->unsignedBigInteger('discountId')->nullable();
+            $table->string('status')->default('true');
             $table->timestamps();
+
+            $table->index('name');
+
+            $table->foreign('productSubCategoryId')->references('id')->on('productSubCategory');
+            $table->foreign('productBrandId')->references('id')->on('productBrand');
+            $table->foreign('discountId')->references('id')->on('discount');
+            $table->foreign('productVatId')->references('id')->on('productVat');
+            $table->foreign('uomId')->references('id')->on('uom');
         });
     }
 
@@ -22,6 +46,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('product');
     }
 };

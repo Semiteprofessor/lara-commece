@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('uo_m_s', function (Blueprint $table) {
+        Schema::create('uom', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('status')->default('true');
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('uo_m_s');
+        Schema::dropIfExists('uom');
     }
 };
