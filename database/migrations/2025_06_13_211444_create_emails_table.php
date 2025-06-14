@@ -11,8 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('emails', function (Blueprint $table) {
+        Schema::create('email', function (Blueprint $table) {
             $table->id();
+            $table->string('senderEmail');
+            $table->string('receiverEmail');
+            $table->string('subject')->nullable();
+            //body can be html
+            $table->longText('body')->nullable();
+            $table->string('attachment')->nullable();
+            $table->string('emailStatus')->nullable();
+            $table->string('status')->default("true");
             $table->timestamps();
         });
     }
@@ -22,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('emails');
+        Schema::dropIfExists('email');
     }
 };
