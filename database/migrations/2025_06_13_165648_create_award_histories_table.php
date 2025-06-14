@@ -11,9 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('award_histories', function (Blueprint $table) {
+        Schema::create('awardHistory', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('userId');
+            $table->unsignedBigInteger('awardId');
+            $table->dateTime('awardedDate');
+            $table->string('comment')->nullable();
+            $table->string('status')->default("true");
             $table->timestamps();
+
+            $table->foreign('userId')->references('id')->on('users');
+            $table->foreign('awardId')->references('id')->on('award');
         });
     }
 
@@ -22,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('award_histories');
+        Schema::dropIfExists('awardHistory');
     }
 };
