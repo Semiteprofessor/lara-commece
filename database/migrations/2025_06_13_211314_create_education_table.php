@@ -13,7 +13,17 @@ return new class extends Migration
     {
         Schema::create('education', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('userId');
+            $table->string('degree');
+            $table->string('institution');
+            $table->string('fieldOfStudy');
+            $table->string('result');
+            $table->dateTime('studyStartDate');
+            $table->dateTime('studyEndDate')->nullable();
+            $table->string('status')->default("true");
             $table->timestamps();
+            // Foreign key constraint
+            $table->foreign('userId')->references('id')->on('users');
         });
     }
 
