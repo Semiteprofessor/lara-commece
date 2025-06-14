@@ -11,9 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('transaction', function (Blueprint $table) {
             $table->id();
+            $table->dateTime('date');
+            $table->unsignedBigInteger('debitId');
+            $table->unsignedBigInteger('creditId');
+            $table->string('particulars');
+            $table->double('amount');
+            $table->string('type')->nullable();
+            $table->string('relatedId')->nullable();
+            $table->string('status')->default("true");
             $table->timestamps();
+
+            $table->foreign('debitId')->references('id')->on('subAccount');
+            $table->foreign('creditId')->references('id')->on('subAccount');
         });
     }
 
@@ -22,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('transaction');
     }
 };
