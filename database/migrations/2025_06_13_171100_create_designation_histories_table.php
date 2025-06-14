@@ -11,9 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('designation_histories', function (Blueprint $table) {
+        Schema::create('designationHistory', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('userId');
+            $table->unsignedBigInteger('designationId');
+            $table->dateTime('startDate');
+            $table->dateTime('endDate')->nullable();
+            $table->string('comment')->nullable();
+            $table->string('status')->default("true");
             $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('userId')->references('id')->on('users');
+            $table->foreign('designationId')->references('id')->on('designation');
         });
     }
 
@@ -22,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('designation_histories');
+        Schema::dropIfExists('designationHistory');
     }
 };
