@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_vats', function (Blueprint $table) {
+        Schema::create('productVat', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->double('percentage');
+            $table->string('status')->default('true');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_vats');
+        Schema::dropIfExists('productVat');
     }
 };
