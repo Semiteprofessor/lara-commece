@@ -11,9 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('review_ratings', function (Blueprint $table) {
+        Schema::create('reviewRating', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('productId');
+            $table->unsignedBigInteger('customerId');
+            $table->integer('rating')->nullable();
+            $table->string('review')->nullable();
+            $table->string('status')->default('true');
             $table->timestamps();
+            // foreign key relation constraints
+            $table->foreign('productId')->references('id')->on('product');
+            $table->foreign('customerId')->references('id')->on('customer');
+
         });
     }
 
@@ -22,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('review_ratings');
+        Schema::dropIfExists('reviewRating');
     }
 };
