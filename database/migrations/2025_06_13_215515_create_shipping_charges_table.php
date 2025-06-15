@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shipping_charges', function (Blueprint $table) {
+        Schema::create('shippingCharge', function (Blueprint $table) {
             $table->id();
+            $table->string('Destination')->nullable();
+            $table->double('charge')->nullable();
+            $table->string('status')->default('true');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shipping_charges');
+        Schema::dropIfExists('shippingCharge');
     }
 };
