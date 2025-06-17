@@ -120,12 +120,12 @@ class SliderImagesController extends Controller
         }
     }
 
-    public function deleteSlider(Request $request, $id)
+    public function deleteSlider(Request $request, $id): JsonResponse
     {
         try {
             $sliderImage = SliderImages::find($id);
             if (!$sliderImage) {
-                return response()->josn(['error' => 'Slider Image Not Found!'], 500);
+                return response()->json(['error' => 'Slider Image Not Found!'], 500);
             }
             $oldImagePath = 'uploads/' . $sliderImage->image;
 
