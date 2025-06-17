@@ -3,48 +3,131 @@
 namespace App\Http\Controllers;
 
 use App\Models\UoM;
-use App\Http\Requests\StoreUoMRequest;
-use App\Http\Requests\UpdateUoMRequest;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class UoMController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Create a new uom.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function index()
+    public function createSingleUoM(Request $request): JsonResponse
     {
-        //
+        try {
+
+            $uom = new UoM();
+            $uom->name = $request->name;
+            $uom->save();
+            $converted = arrayKeysToCamelCase($uom->toArray());
+            return response()->json([$converted], 201);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Get all uom.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(StoreUoMRequest $request)
+    public function getAllUoM(Request $request): JsonResponse
     {
-        //
+        try {
+            if ($request->query('query') === 'all') {
+                $uom = UoM::where('status', 'true')
+                    ->orderBy('id', 'desc')
+                    ->get();
+                $converted = arrayKeysToCamelCase($uom->toArray());
+                return response()->json($converted);
+            } elseif ($request->query()) {
+                $pagination = getPagination($request->query());
+                $uom = UoM::where('status', $request->query('status'))
+                    ->skip($pagination['skip'])
+                    ->take($pagination['limit'])
+                    ->orderBy('id', 'desc')
+                    ->get();
+                $total = UoM::where('status', $request->query('status'))
+                    ->count();
+                $converted = arrayKeysToCamelCase($uom->toArray());
+                $result = [
+                    'getAllUoM' => $converted,
+                    'totalUoM' => $total
+                ];
+
+                return response()->json($result);
+            } else {
+                return response()->json(['error' => "Invalid query parameter"], 404);
+            }
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Get single uom.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function show(UoM $uoM)
+    public function getSingleUoM(Request $request): JsonResponse
     {
-        //
+        try {
+            $uom = UoM::findOrFail($request->id);
+            if ($uom) {
+                $converted = arrayKeysToCamelCase($uom->toArray());
+                return response()->json($converted, 200);
+            } else {
+                return response()->json(['error' => "UoM not found"], 404);
+            }
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update single uom.
+     *
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(UpdateUoMRequest $request, UoM $uoM)
+    public function updateSingleUoM(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $uom = UoM::findOrFail($id);
+            $uom->name = $request->name ?? $uom->name;
+            $uom->save();
+            $converted = arrayKeysToCamelCase($uom->toArray());
+            return response()->json($converted, 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete single uom.
+     *
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy(UoM $uoM)
+    public function deleteSingleUoM(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $uom = UoM::findOrFail($id);
+            $uom->status = $request->status;
+            $uom->save();
+            return response()->json(['message' => "UoM deleted successfully"], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
+
+
 }
