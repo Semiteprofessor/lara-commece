@@ -2,49 +2,70 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\WeightUnit;
-use App\Http\Requests\StoreWeightUnitRequest;
-use App\Http\Requests\UpdateWeightUnitRequest;
+use Illuminate\Http\Request;
 
 class WeightUnitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+
+    public function createSingleWeightUnit(Request $request)
     {
-        //
+        try{
+            $weightUnit = WeightUnit::where('name', $request->name)->first();
+            if($weightUnit){
+                return response()->json(['error' => 'A Weight Unit with the same name already exists'], 400);
+            }
+            $weightUnit = new WeightUnit();
+            $weightUnit->name = $request->name;
+            $weightUnit->save();
+            $converted = arrayKeysToCamelCase($weightUnit->toArray());
+            return response()->json($converted, 201);
+        }catch(Exception $e){
+            return response()->json(['error' => 'An error occurred while creating the Weight Unit record'], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreWeightUnitRequest $request)
+
+    public function getAllWeightUnit()
     {
-        //
+        try{
+            $weightUnits = WeightUnit::where('status', 'true')->get();
+            $converted = arrayKeysToCamelCase($weightUnits->toArray());
+            return response()->json($converted, 200);
+        }catch(Exception $e){
+            return response()->json(['error' => 'An error occurred while retrieving the Weight Units'], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(WeightUnit $weightUnit)
+    public function updateSingleWeightUnit(Request $request, $id)
     {
-        //
+        try{
+            $weightUnit = WeightUnit::where('name', $request->name)->first();
+            if($weightUnit){
+                return response()->json(['error' => 'A Weight Unit with the same name already exists'], 400);
+            }
+            $weightUnit = WeightUnit::find($id);
+            $weightUnit->name = $request->name;
+            $weightUnit->save();
+            $converted = arrayKeysToCamelCase($weightUnit->toArray());
+            return response()->json($converted, 200);
+        }catch(Exception $e){
+            return response()->json(['error' => 'An error occurred while updating the Weight Unit record'], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateWeightUnitRequest $request, WeightUnit $weightUnit)
+    public function deleteSingleWeightUnit(Request $request, $id)
     {
-        //
+        try{
+            $weightUnit = WeightUnit::find($id);
+            $weightUnit->status = $request->status;
+            $weightUnit->save();
+            return response()->json(['message' => 'Weight Unit record deleted successfully'], 200);
+        } catch(Exception $e){
+            return response()->json(['error' => 'An error occurred while deleting the Weight Unit record'], 500);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(WeightUnit $weightUnit)
-    {
-        //
-    }
 }
