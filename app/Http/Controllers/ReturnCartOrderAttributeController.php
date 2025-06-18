@@ -259,7 +259,7 @@ class ReturnCartOrderController extends Controller
             }
         } else if ($userRole === 'admin') {
             // check authentication
-            $userFromDB = Users::where('id', $userSub)->with('role:id,name')->first();
+            $userFromDB = User::where('id', $userSub)->with('role:id,name')->first();
             if ($userSub !== (int)$userFromDB->id && $userRole !== $userFromDB->role->name) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
@@ -736,7 +736,7 @@ class ReturnCartOrderController extends Controller
         } else if ($userRole === 'admin') {
 
             // check authentication
-            $userFromDB = Users::where('id', $userSub)->with('role:id,name')->first();
+            $userFromDB = User::where('id', $userSub)->with('role:id,name')->first();
             if ($userSub !== (int)$userFromDB->id && $userRole !== $userFromDB->role->name) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
