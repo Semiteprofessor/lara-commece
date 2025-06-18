@@ -3,48 +3,163 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductAttribute;
-use App\Http\Requests\StoreProductAttributeRequest;
-use App\Http\Requests\UpdateProductAttributeRequest;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductAttributeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    //create product attribute
+    public function createProductAttribute(Request $request): JsonResponse
     {
-        //
+        DB::beginTransaction();
+        if ($request->query('query') === 'deletemany') {
+            try {
+                $ids = json_decode($request->getContent(), true);
+                $deletedManyProductAttribute = ProductAttribute::destroy($ids);
+
+                $deletedCount = [
+                    'count' => $deletedManyProductAttribute
+                ];
+                DB::commit();
+                return response()->json($deletedCount, 200);
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return response()->json(['error' => $exception->getMessage()], 500);
+            }
+        } else if ($request->query('query') === 'createmany') {
+            try {
+                $attributeData = json_decode($request->getContent(), true);
+                collect($attributeData)->map(function ($item) {
+                    return $item['name'];
+                });
+
+                $existingAttributes = ProductAttribute::whereIn('name', $attributeData)->get();
+                if ($existingAttributes->isNotEmpty()) {
+                    $existingNames = $existingAttributes->pluck('name')->toArray();
+                    $arrayUnique = array_unique($existingNames);
+                    $newArray = implode(', ', $arrayUnique);
+
+                    return response()->json(['error' => 'Product Attribute ' . $newArray . ' already exists'], 409);
+                }
+
+                $createdProductAttribute = collect($attributeData)->map(function ($item) {
+                    return ProductAttribute::create([
+                        'name' => $item['name'],
+                    ]);
+                });
+                DB::commit();
+                return response()->json(['count' => count($createdProductAttribute)], 201);
+
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return response()->json(['error' => $exception->getMessage()], 500);
+            }
+        } else {
+            try {
+                $attributeData = json_decode($request->getContent(), true);
+                $createdProductAttribute = ProductAttribute::create([
+                    'name' => $attributeData['name'],
+                ]);
+                $converted = arrayKeysToCamelCase($createdProductAttribute->toArray());
+                DB::commit();
+                return response()->json($converted, 201);
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return response()->json(['error' => $exception->getMessage()], 500);
+            }
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreProductAttributeRequest $request)
+    //get all product attribute
+    public function getAllProductAttribute(Request $request): JsonResponse
     {
-        //
+        if (request()->query('query') === 'all') {
+            try {
+                $productAttribute = ProductAttribute::with('productAttributeValue')
+                    ->where('status', 'true')
+                    ->orderBy('id', 'desc')
+                    ->get();
+
+                $converted = arrayKeysToCamelCase($productAttribute->toArray());
+                return response()->json($converted, 200);
+            } catch (Exception $exception) {
+                return response()->json(['error' => $exception->getMessage()], 500);
+            }
+        } else if ($request->query()) {
+            try {
+                $pagination = getPagination(request()->query());
+
+                $productAttribute = ProductAttribute::with(['productAttributeValue.productProductAttributeValue'])->orderBy('id', 'desc')
+                    ->where('status', $request->query('status'))
+                    ->skip($pagination['skip'])
+                    ->take($pagination['limit'])
+                    ->get();
+
+                $total = ProductAttribute::where('status', $request->query('status'))->count();
+
+                $converted = arrayKeysToCamelCase($productAttribute->toArray());
+                $result = [
+                    'getAllProductAttribute' => $converted,
+                    'totalProductAttribute' => $total
+                ];
+                return response()->json($result, 200);
+            } catch (Exception $exception) {
+                return response()->json(['error' => $exception->getMessage()], 500);
+            }
+        } else {
+            return response()->json(['error' => 'Invalid Query'], 404);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ProductAttribute $productAttribute)
+    //single product attribute
+    public function getSingleProductAttribute($id): JsonResponse
     {
-        //
+        try {
+            $productAttribute = ProductAttribute::with(['productAttributeValue.productProductAttributeValue'])->find($id);
+
+            if (!$productAttribute) {
+                return response()->json(['error' => 'Product Attribute Not Found'], 404);
+            }
+
+            $converted = arrayKeysToCamelCase($productAttribute->toArray());
+            return response()->json($converted, 200);
+        } catch (Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateProductAttributeRequest $request, ProductAttribute $productAttribute)
+    //update product attribute
+    public function updateProductAttribute(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $productAttribute = ProductAttribute::find($id);
+
+            if (!$productAttribute) {
+                return response()->json(['error' => 'Product Attribute Not Found'], 404);
+            }
+
+            $productAttribute->update($request->all());
+            return response()->json($productAttribute, 200);
+        } catch (Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ProductAttribute $productAttribute)
+    //delete product attribute
+    public function deleteProductAttribute(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $productAttribute = ProductAttribute::where('id', $id)->update([
+                'status' => $request->input('status')
+            ]);
+            if (!$productAttribute) {
+                return response()->json(['error' => 'Product Attribute Not Found'], 404);
+            }
+            return response()->json(['message' => 'Product Attribute Deleted Successfully'], 200);
+        } catch (Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
     }
 }
