@@ -3,48 +3,158 @@
 namespace App\Http\Controllers;
 
 use App\Models\PurchaseReorderInvoice;
-use App\Http\Requests\StorePurchaseReorderInvoiceRequest;
-use App\Http\Requests\UpdatePurchaseReorderInvoiceRequest;
+use Exception;
+use Illuminate\Http\{JsonResponse, Request};
+use Illuminate\Support\Facades\DB;
 
 class PurchaseReorderInvoiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function createPurchaseReorderInvoice(Request $request): JsonResponse
     {
-        //
+        DB::beginTransaction();
+        try {
+            // generate 10 digit unique invoice id
+            $reorderInvoiceId = $this->generateInvoiceId(10);
+            if (PurchaseReorderInvoice::where('reorderInvoiceId', $reorderInvoiceId)->exists()) {
+                $reorderInvoiceId = $this->generateInvoiceId(8);
+            }
+
+
+            $reorderData = json_decode($request->getContent(), true);
+            $createdReorderInvoice = collect($reorderData)->map(function ($item) use ($reorderInvoiceId) {
+                return PurchaseReorderInvoice::create([
+                    'reorderInvoiceId' => $reorderInvoiceId,
+                    'productId' => $item['productId'],
+                    'productQuantity' => $item['productQuantity']
+                ]);
+            });
+
+            $converted = arrayKeysToCamelCase($createdReorderInvoice->toArray());
+            DB::commit();
+            return response()->json($converted, 200);
+        } catch (Exception) {
+            DB::rollBack();
+            return response()->json(['error' => 'An error occurred during creating a purchase reorder invoice'], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePurchaseReorderInvoiceRequest $request)
+    protected function generateInvoiceId($digit): string
     {
-        //
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $invoiceCode = '';
+
+        for ($i = 0; $i < $digit; $i++) {
+            $randomIndex = rand(0, strlen($characters) - 1);
+            $invoiceCode = $invoiceCode . $characters[$randomIndex];
+        }
+        return $invoiceCode;
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(PurchaseReorderInvoice $purchaseReorderInvoice)
+    //get all purchase reorder invoice
+    public function getAllPurchaseReorderInvoice(Request $request): JsonResponse
     {
-        //
+        if ($request->query('query') === 'all') {
+            try {
+                $getAllPurchaseReorderInvoice = PurchaseReorderInvoice::orderBy('id', 'desc')
+                    ->get();
+                $groupBy = $getAllPurchaseReorderInvoice->groupBy('reorderInvoiceId');
+
+                $modified = [];
+                foreach ($groupBy as $reorderInvoiceId => $groupedData) {
+                    $modified[] = [
+                        'reorderInvoiceId' => $reorderInvoiceId,
+                        'created_at' => $groupedData[0]['created_at'],
+                        'updated_at' => $groupedData[0]['updated_at'],
+                        'status' => $groupedData[0]['status'],
+                    ];
+                }
+
+                $converted = arrayKeysToCamelCase(collect($modified)->toArray());
+                return response()->json($converted, 200);
+            } catch (Exception $err) {
+                return response()->json(['error' => 'An error occurred during creating a purchase reorder invoice'], 500);
+            }
+        } else {
+            try {
+                $pagination = getPagination($request->query());
+                $getAllPurchaseReorderInvoice = PurchaseReorderInvoice::orderBy('id', 'desc')
+                    ->get();
+
+                $totalCount = $getAllPurchaseReorderInvoice->groupBy('reorderInvoiceId')->count();
+                $groupBy = $getAllPurchaseReorderInvoice->groupBy('reorderInvoiceId')
+                    ->skip($pagination['skip'])
+                    ->take($pagination['limit']);
+
+                $modified = [];
+                foreach ($groupBy as $reorderInvoiceId => $groupedData) {
+                    $modified[] = [
+                        'reorderInvoiceId' => $reorderInvoiceId,
+                        'created_at' => $groupedData[0]['created_at'],
+                        'updated_at' => $groupedData[0]['updated_at'],
+                        'status' => $groupedData[0]['status'],
+                    ];
+                }
+
+                $converted = arrayKeysToCamelCase(collect($modified)->toArray());
+                $finalResult = [
+                    'getAllPurchaseReorderInvoice' => $converted,
+                    'totalReorderInvoice' => $totalCount,
+                ];
+
+                return response()->json($finalResult, 200);
+            } catch (Exception $err) {
+                return response()->json(['error' => 'An error occurred during creating a purchase reorder invoice'], 500);
+            }
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePurchaseReorderInvoiceRequest $request, PurchaseReorderInvoice $purchaseReorderInvoice)
+    // get a single purchase reorder invoice
+    public function getSinglePurchaseReorderInvoice(Request $request, $reorderInvoiceId): JsonResponse
     {
-        //
+        try {
+            $getAllPurchaseReorderInvoice = PurchaseReorderInvoice::where('reorderInvoiceId', $reorderInvoiceId)
+                ->orderBy('id', 'desc')
+                ->with('product')
+                ->get();
+            $groupBy = $getAllPurchaseReorderInvoice->groupBy('reorderInvoiceId');
+            $modified = [];
+            foreach ($groupBy as $reorderInvoiceId => $groupedData) {
+                $modified = [
+                    'reorderInvoiceId' => $reorderInvoiceId,
+                    'created_at' => $groupedData[0]['created_at'],
+                    'updated_at' => $groupedData[0]['updated_at'],
+                    'status' => $groupedData[0]['status'],
+                    'productList' => collect($groupedData)->map(function ($item) {
+                        $data = [
+                            'productId' => $item['productId'],
+                            'reorderProductQuantity' => $item['productQuantity'],
+                            'product' => $item['product']
+                        ];
+                        return $data;
+                    })
+                ];
+            }
+
+            $converted = arrayKeysToCamelCase(collect($modified)->toArray());
+            return response()->json($converted, 200);
+        } catch (Exception $err) {
+            return response()->json(['error' => 'An error occurred during creating a purchase reorder invoice'], 500);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PurchaseReorderInvoice $purchaseReorderInvoice)
+    // delete a single purchase reorder invoice
+    public function deletePurchaseReorderInvoice(Request $request, $reorderInvoiceId): JsonResponse
     {
-        //
+        try {
+            $deleted = PurchaseReorderInvoice::where('reorderInvoiceId', $reorderInvoiceId)
+                ->delete();
+
+            if (!$deleted) {
+                return response()->json(['error' => 'Failed to delete Reorder Invoice'], 404);
+            }
+            return response()->json(['message' => 'Reorder Invoice deleted successfully'], 200);
+        } catch (Exception $err) {
+            return response()->json(['error' => 'An error occurred during creating a purchase reorder invoice'], 500);
+        }
     }
 }
