@@ -3,48 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\Permission;
-use App\Http\Requests\StorePermissionRequest;
-use App\Http\Requests\UpdatePermissionRequest;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PermissionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    //get all permission
+    public function getAllPermission(Request $request): JsonResponse
     {
-        //
-    }
+        if ($request->query('query') === 'all') {
+            try {
+                $allPermissions = Permission::orderBy('id', 'desc')->get();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePermissionRequest $request)
-    {
-        //
-    }
+                $converted = arrayKeysToCamelCase($allPermissions->toArray());
+                return response()->json($converted);
+            }catch (Exception $error) {
+                return response()->json(['error' => 'An error occurred during getting permission. Please try again later.'], 500);
+            }
+        } else {
+            $pagination = getPagination($request->query());
+            try {
+                $permissions = Permission::orderBy('id', 'desc')
+                    ->skip($pagination['skip'])
+                    ->take($pagination['limit'])
+                    ->get();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Permission $permission)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePermissionRequest $request, Permission $permission)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Permission $permission)
-    {
-        //
+                $converted = arrayKeysToCamelCase($permissions->toArray());
+                return response()->json($converted, 200);
+            } catch (Exception $error) {
+                return response()->json(['error' => 'An error occurred during getting permission. Please try again later.'], 500);
+            }
+        }
     }
 }
