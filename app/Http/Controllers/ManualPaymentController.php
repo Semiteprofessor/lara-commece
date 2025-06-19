@@ -16,7 +16,7 @@ use App\Models\CartOrderProduct;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
-class manualPaymentController extends Controller
+class ManualPaymentController extends Controller
 {
     public function createManualPayment(Request $request): JsonResponse
     {
