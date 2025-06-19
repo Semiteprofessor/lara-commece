@@ -2,49 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\EcomSetting;
-use App\Http\Requests\StoreEcomSettingRequest;
-use App\Http\Requests\UpdateEcomSettingRequest;
+use Illuminate\Http\Request;
 
 class EcomSettingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+
+    public function updateSingleecomSetting(Request $request)
     {
-        //
+        try {
+            $ecomSetting = EcomSetting::find(1);
+
+            $ecomSetting->update([
+                'IsActive' => $request->input('isActive'),
+            ]);
+            $converted = arrayKeysToCamelCase($ecomSetting->toArray());
+            return response()->json($converted, 200);
+        } catch (Exception $err) {
+            return response()->json(['error' => 'An error occurred during updating EcomSetting. Please try again later.'], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreEcomSettingRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(EcomSetting $ecomSetting)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateEcomSettingRequest $request, EcomSetting $ecomSetting)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(EcomSetting $ecomSetting)
-    {
-        //
-    }
 }
