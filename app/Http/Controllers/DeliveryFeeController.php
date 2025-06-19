@@ -3,48 +3,90 @@
 namespace App\Http\Controllers;
 
 use App\Models\DeliveryFee;
-use App\Http\Requests\StoreDeliveryFeeRequest;
-use App\Http\Requests\UpdateDeliveryFeeRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
 
 class DeliveryFeeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function createDeliveryFee(Request $request): JsonResponse
     {
-        //
+        try {
+            $deliveryFee = DeliveryFee::create([
+                'deliveryArea' => $request->deliveryArea,
+                'deliveryFee' => $request->deliveryFee,
+            ]);
+            if (!$deliveryFee) {
+                return response()->json([
+                    'error' => 'Delivery Fee not created. Please try again later.'
+                ], 409);
+            }
+            $converted = arrayKeysToCamelCase($deliveryFee->toArray());
+            return response()->json($converted, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred during creating Delivery Fee. Please try again later.'
+            ], 409);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreDeliveryFeeRequest $request)
+    public function getAllDeliveryFees(): JsonResponse
     {
-        //
+        try {
+            $deliveryFees = DeliveryFee::where('status', 'true')
+                ->orderBy('id', 'desc')
+                ->get();
+            $converted = arrayKeysToCamelCase($deliveryFees->toArray());
+            return response()->json($converted, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred during fetching Delivery Fees. Please try again later.'
+            ], 409);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(DeliveryFee $deliveryFee)
+
+    public function updateDeliveryFee(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $deliveryFee = DeliveryFee::find((int)$id);
+            $update = $deliveryFee->update([
+                'deliveryArea' => $request->deliveryArea ?? $deliveryFee->deliveryArea,
+                'deliveryFee' => $request->deliveryFee ?? $deliveryFee->deliveryFee,
+            ]);
+            if (!$update) {
+                return response()->json([
+                    'error' => 'Delivery Fee not updated. Please try again later.'
+                ], 409);
+            }
+            $converted = arrayKeysToCamelCase($deliveryFee->toArray());
+            return response()->json($converted, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred during updating Delivery Fee. Please try again later.'
+            ], 409);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateDeliveryFeeRequest $request, DeliveryFee $deliveryFee)
+    public function deleteDeliveryFee(Request $request, $id): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(DeliveryFee $deliveryFee)
-    {
-        //
+        try {
+            $deliveryFee = DeliveryFee::find($id);
+            DeliveryFee::where("id", $id)->update([
+                'status' => $request->status,
+            ]);
+            if (!$deliveryFee) {
+                return response()->json([
+                    'error' => 'Delivery Fee not deleted. Please try again later.'
+                ], 409);
+            }
+            return response()->json([
+                'message' => 'Delivery Fee Deleted Successfully',
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred during deleting Delivery Fee. Please try again later.'
+            ], 409);
+        }
     }
 }
