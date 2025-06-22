@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('refreshToken')->nullable();
             $table->string('email')->unique()->nullable();
-            $table->string('employeeId')->unique();
+            $table->string('employeeId')->unique()->nullable();
             $table->string('phone')->nullable();
             $table->string('street')->nullable();
             $table->string('city')->nullable();
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->unsignedBigInteger('employmentStatusId')->nullable();
             $table->unsignedBigInteger('departmentId')->nullable();
             $table->unsignedBigInteger('shiftId')->nullable();
-            $table->unsignedBigInteger('roleId');
+            $table->unsignedBigInteger('roleId')->nullable();
             $table->dateTime('joinDate')->nullable();
             $table->dateTime('leaveDate')->nullable();
             $table->string('isLogin')->default('false');
@@ -40,6 +40,8 @@ return new class extends Migration
 
             // Foreign key constraints
             $table->foreign('roleId')->references('id')->on('role');
+            $table->unsignedBigInteger('designationId')->nullable()->after('image');
+            $table->foreign('designationId')->references('id')->on('designation');
             $table->foreign('employmentStatusId')->references('id')->on('employmentStatus');
             $table->foreign('departmentId')->references('id')->on('department');
             $table->foreign('shiftId')->references('id')->on('shift');
@@ -49,8 +51,11 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        Schema::dropIfExists('users');
-    }
+    public function down()
+{
+    Schema::table('users', function (Blueprint $table) {
+        $table->dropForeign(['designationId']);
+        $table->dropColumn('designationId');
+    });
+}
 };
