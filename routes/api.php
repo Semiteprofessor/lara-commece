@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdjustInventoryController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AppSettingController;
+use App\Http\Controllers\AwardController;
 use App\Http\Controllers\AwardHistoryController;
 use App\Http\Controllers\RefreshTokenController;
 use App\Http\Controllers\UsersController;
@@ -57,5 +58,11 @@ use Illuminate\Support\Facades\Route;
     Route::middleware("permission:readSingle-awardHistory")->get("/{id}", [AwardHistoryController::class, 'getSingleAwardHistory']);
     Route::middleware("permission:update-awardHistory")->put("/{id}", [AwardHistoryController::class, 'updateSingleAwardHistory']);
     Route::middleware("permission:delete-awardHistory")->delete("/{id}", [AwardHistoryController::class, 'deleteSingleAwardHistory']);
+
+    Route::middleware("permission:create-award")->post("/", [AwardController::class, 'createSingleAward']);
+    Route::middleware("permission:readAll-award")->get("/", [AwardController::class, 'getAllAward']);
+    Route::middleware("permission:")->get("/{id}", [AwardController::class, 'getSingleAward']);
+    Route::middleware("permission:update-award")->put("/{id}", [AwardController::class, 'updateSingleAward']);
+    Route::middleware("permission:delete-award")->patch("/{id}", [AwardController::class, 'deleteSingleAward']);
 
 //});
