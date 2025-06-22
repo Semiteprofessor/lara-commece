@@ -6,6 +6,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AppSettingController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\AwardHistoryController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartOrderController;
 use App\Http\Controllers\RefreshTokenController;
 use App\Http\Controllers\UsersController;
@@ -71,5 +72,11 @@ use Illuminate\Support\Facades\Route;
     Route::middleware('permission:readAll-cartOrder')->get("/", [CartOrderController::class, 'getAllCartOrder']);
     Route::middleware('permission:readSingle-cartOrder')->get("/{id}", [CartOrderController::class, 'getSingleCartOrder']);
     Route::middleware('permission:update-cartOrder')->patch("/order", [CartOrderController::class, 'updateCartOrderStatus']);
+
+    Route::middleware('permission:create-cart')->post("/", [CartController::class, 'createCart']);
+    Route::middleware('permission:readAll-cart')->get("/", [CartController::class, 'getAllCart']);
+    Route::middleware('permission:readSingle-cart')->get("/customer/{id}", [CartController::class, 'getCartByUserId']);
+    Route::middleware('permission:readSingle-cart')->get("/{id}", [CartController::class, 'getSingleCart']);
+    Route::middleware('permission:readSingle-cart')->put("/cart-product/{id}", [CartController::class, 'updateSingleCartProduct']);
 
 //});
