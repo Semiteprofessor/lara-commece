@@ -6,6 +6,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AppSettingController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\AwardHistoryController;
+use App\Http\Controllers\CartOrderController;
 use App\Http\Controllers\RefreshTokenController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -64,5 +65,11 @@ use Illuminate\Support\Facades\Route;
     Route::middleware("permission:")->get("/{id}", [AwardController::class, 'getSingleAward']);
     Route::middleware("permission:update-award")->put("/{id}", [AwardController::class, 'updateSingleAward']);
     Route::middleware("permission:delete-award")->patch("/{id}", [AwardController::class, 'deleteSingleAward']);
+
+    Route::middleware('permission:create-cartOrder')->post("/", [CartOrderController::class, 'createSingleCartOrder']);
+    Route::middleware('permission:create-cartReOrder')->post("/reOrder", [CartOrderController::class, 'createReOrderForReturn']);
+    Route::middleware('permission:readAll-cartOrder')->get("/", [CartOrderController::class, 'getAllCartOrder']);
+    Route::middleware('permission:readSingle-cartOrder')->get("/{id}", [CartOrderController::class, 'getSingleCartOrder']);
+    Route::middleware('permission:update-cartOrder')->patch("/order", [CartOrderController::class, 'updateCartOrderStatus']);
 
 //});
