@@ -8,6 +8,7 @@ use App\Http\Controllers\AwardController;
 use App\Http\Controllers\AwardHistoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartOrderController;
+use App\Http\Controllers\ColorsController;
 use App\Http\Controllers\RefreshTokenController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -78,5 +79,13 @@ use Illuminate\Support\Facades\Route;
     Route::middleware('permission:readSingle-cart')->get("/customer/{id}", [CartController::class, 'getCartByUserId']);
     Route::middleware('permission:readSingle-cart')->get("/{id}", [CartController::class, 'getSingleCart']);
     Route::middleware('permission:readSingle-cart')->put("/cart-product/{id}", [CartController::class, 'updateSingleCartProduct']);
+
+    Route::get("/public", [ColorsController::class, 'getPublicColors']);
+
+    Route::middleware('permission:create-color')->post("/", [ColorsController::class, 'createSingleColors']);
+    Route::middleware('permission:readAll-color')->get("/", [ColorsController::class, 'getAllColors']);
+    Route::middleware('permission:readAll-color')->get("/{id}", [ColorsController::class, 'getSingleColors']);
+    Route::middleware('permission:update-color')->put("/{id}", [ColorsController::class, 'updateSingleColors']);
+    Route::middleware('permission:delete-color')->patch("/{id}", [ColorsController::class, 'deleteSingleColors']);
 
 //});
