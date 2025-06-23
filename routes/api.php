@@ -9,6 +9,8 @@ use App\Http\Controllers\AwardHistoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartOrderController;
 use App\Http\Controllers\ColorsController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\CourierMediumController;
 use App\Http\Controllers\RefreshTokenController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -87,5 +89,20 @@ use Illuminate\Support\Facades\Route;
     Route::middleware('permission:readAll-color')->get("/{id}", [ColorsController::class, 'getSingleColors']);
     Route::middleware('permission:update-color')->put("/{id}", [ColorsController::class, 'updateSingleColors']);
     Route::middleware('permission:delete-color')->patch("/{id}", [ColorsController::class, 'deleteSingleColors']);
+
+    Route::middleware('permission:create-coupon')->post('/', [CouponController::class, 'createCoupon']);
+    Route::middleware('permission:readAll-coupon')->get('/', [CouponController::class, 'getAllCoupon']);
+    Route::middleware('permission:readAll-coupon')->get('/valid', [CouponController::class, 'getAllValidCoupon']);
+
+    Route::get('/valid/{coupon}', [CouponController::class, 'getSingleValidCoupon']);
+    Route::middleware('permission:readSingle-coupon')->get('/{id}', [CouponController::class, 'getSingleCoupon']);
+    Route::middleware('permission:update-coupon')->put('/{id}', [CouponController::class, 'updateSingleCoupon']);
+    Route::middleware('permission:delete-coupon')->patch('/{id}', [CouponController::class, 'deleteCoupon']);
+
+    Route::middleware('permission:create-courierMedium')->post("/", [CourierMediumController::class, 'createSingleCourierMedium']);
+    Route::middleware('permission:readAll-courierMedium')->get("/", [CourierMediumController::class, 'getAllCourierMedium']);
+    Route::middleware('permission:readAll-courierMedium')->get("/{id}", [CourierMediumController::class, 'getSingleCourierMedium']);
+    Route::middleware('permission:update-courierMedium')->put("/{id}", [CourierMediumController::class, 'updateSingleCourierMedium']);
+    Route::middleware('permission:delete-courierMedium')->patch("/{id}", [CourierMediumController::class, 'deleteSingleCourierMedium']);
 
 //});
