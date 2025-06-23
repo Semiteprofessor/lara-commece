@@ -11,6 +11,7 @@ use App\Http\Controllers\CartOrderController;
 use App\Http\Controllers\ColorsController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CourierMediumController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\RefreshTokenController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -104,5 +105,12 @@ use Illuminate\Support\Facades\Route;
     Route::middleware('permission:readAll-courierMedium')->get("/{id}", [CourierMediumController::class, 'getSingleCourierMedium']);
     Route::middleware('permission:update-courierMedium')->put("/{id}", [CourierMediumController::class, 'updateSingleCourierMedium']);
     Route::middleware('permission:delete-courierMedium')->patch("/{id}", [CourierMediumController::class, 'deleteSingleCourierMedium']);
+
+    Route::middleware(['permission:create-currency'])->post("/", [CurrencyController::class, 'createSingleCurrency']);
+
+    Route::middleware('permission:readAll-currency')->get("/", [CurrencyController::class, 'getAllCurrency']);
+    Route::middleware('permission:readSingle-currency')->get("/{id}", [CurrencyController::class, 'getSingleCurrency']);
+    Route::middleware(['permission:update-currency'])->put("/{id}", [CurrencyController::class, 'updateSingleCurrency']);
+    Route::middleware('permission:delete-currency')->patch("/{id}", [CurrencyController::class, 'deleteSingleCurrency']);
 
 //});
