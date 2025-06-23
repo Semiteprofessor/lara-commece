@@ -17,6 +17,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeliveryChallanController;
 use App\Http\Controllers\DeliveryFeeController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\DesignationHistoryController;
 use App\Http\Controllers\RefreshTokenController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -152,5 +154,17 @@ use Illuminate\Support\Facades\Route;
     Route::middleware('permission:')->get('/{id}', [departmentController::class, 'getSingleDepartment']);
     Route::middleware('permission:update-department')->put("/{id}", [departmentController::class, 'updateSingleDepartment']);
     Route::middleware('permission:delete-department')->patch("/{id}", [departmentController::class, 'deletedDepartment']);
+
+    Route::middleware('permission:create-designationHistory')->post("/", [DesignationHistoryController::class, 'createSingleDesignationHistory']);
+    Route::middleware('permission:readAll-designationHistory')->get("/", [DesignationHistoryController::class, 'getAllDesignationHistory']);
+    Route::middleware('permission:readSingle-designationHistory')->get("/{id}", [DesignationHistoryController::class, 'getSingleDesignationHistory']);
+    Route::middleware('permission:update-designationHistory')->put("/{id}", [DesignationHistoryController::class, 'updateSingleDesignationHistory']);
+    Route::middleware('permission:delete-designationHistory')->delete("/{id}", [DesignationHistoryController::class, 'deleteSingleDesignationHistory']);
+
+    Route::middleware('permission:create-designation')->post("/", [DesignationController::class, 'createSingleDesignation']);
+    Route::middleware('permission:readAll-designation')->get("/", [DesignationController::class, 'getAllDesignation']);
+    Route::middleware('permission:readSingle-designation')->get("/{id}", [DesignationController::class, 'getSingleDesignation']);
+    Route::middleware('permission:update-designation')->put("/{id}", [DesignationController::class, 'updateSingleDesignation']);
+    Route::middleware('permission:delete-designation')->patch("/{id}", [DesignationController::class, 'deleteSingleDesignation']);
 
 //});
