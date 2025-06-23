@@ -1,170 +1,79 @@
 <?php
 
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\AdjustInventoryController;
-use App\Http\Controllers\AnnouncementController;
-use App\Http\Controllers\AppSettingController;
-use App\Http\Controllers\AwardController;
-use App\Http\Controllers\AwardHistoryController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CartOrderController;
-use App\Http\Controllers\ColorsController;
-use App\Http\Controllers\CouponController;
-use App\Http\Controllers\CourierMediumController;
-use App\Http\Controllers\CurrencyController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DeliveryChallanController;
-use App\Http\Controllers\DeliveryFeeController;
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\DesignationController;
-use App\Http\Controllers\DesignationHistoryController;
-use App\Http\Controllers\RefreshTokenController;
-use App\Http\Controllers\UsersController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-//Route::middleware('ip')->group(function () {
-    Route::middleware('permission:create-transaction')->post('/', [AccountController::class, 'createSubAccount']);
-    Route::middleware('permission:readAll-transaction')->get('/', [AccountController::class, 'getAllAccount']);
-    Route::middleware('permission:readSingle-transaction')->get('/{id}', [AccountController::class, 'getSingleAccount']);
-    Route::middleware('permission:update-transaction')->put('/{id}', [AccountController::class, 'updateSubAccount']);
-    Route::middleware('permission:delete-transaction')->patch('/{id}', [AccountController::class, 'deleteSubAccount']);
-
-    Route::post('/login', [UsersController::class, 'login']);
-    Route::post('/logout', [UsersController::class, 'logout']);
-    Route::post('/register', [UsersController::class, 'register']);
-    //refresh token routes
-    Route::get('/refresh-token', [RefreshTokenController::class, 'validationRefreshToken']);
-
-    Route::middleware("permission:readAll-user")->get('/', [UsersController::class, 'getAllUser']);
-    Route::middleware("permission:readSingle-user")->get('/{id}', [UsersController::class, 'getSingleUser']);
-    Route::middleware("permission:update-user")->put("/{id}", [UsersController::class, 'updateSingleUser']);
-    Route::middleware("permission:delete-user")->patch("/{id}", [UsersController::class, 'deleteUser']);
-
-    Route::middleware('permission:create-adjust')->post("/", [AdjustInventoryController::class, 'createAdjustInventory']);
-    Route::middleware('permission:readAll-adjust')->get("/", [AdjustInventoryController::class, 'getAllAdjustInvoices']);
-    Route::middleware('permission:readSingle-adjust')->get("/{id}", [AdjustInventoryController::class, 'getSingleAdjustInvoice']);
-
-    Route::middleware("permission:create-announcement")->post("/", [AnnouncementController::class, 'createSingleAnnouncement']);
-    Route::middleware("permission:readAll-announcement")->get("/", [AnnouncementController::class, 'getAllAnnouncement']);
-    Route::middleware("permission:readSingle-announcement")->get("/{id}", [AnnouncementController::class, 'getSingleAnnouncement']);
-    Route::middleware("permission:update-announcement")->put("/{id}", [AnnouncementController::class, 'updateSingleAnnouncement']);
-    Route::middleware("permission:delete-announcement")->patch("/{id}", [AnnouncementController::class, 'deletedAnnouncement']);
-
-    Route::get('/', [AppSettingController::class, 'getSingleAppSetting']);
-    Route::middleware(["permission:update-setting", 'fileUploader:1'])->put("/", [AppSettingController::class, 'updateAppSetting']);
-
-    Route::middleware("permission:create-awardHistory")->post("/", [AwardHistoryController::class, 'createSingleAwardHistory']);
-    Route::middleware("permission:readAll-awardHistory")->get("/", [AwardHistoryController::class, 'getAllAwardHistory']);
-    Route::middleware("permission:readSingle-awardHistory")->get("/{id}", [AwardHistoryController::class, 'getSingleAwardHistory']);
-    Route::middleware("permission:update-awardHistory")->put("/{id}", [AwardHistoryController::class, 'updateSingleAwardHistory']);
-    Route::middleware("permission:delete-awardHistory")->delete("/{id}", [AwardHistoryController::class, 'deleteSingleAwardHistory']);
-
-    Route::middleware("permission:create-award")->post("/", [AwardController::class, 'createSingleAward']);
-    Route::middleware("permission:readAll-award")->get("/", [AwardController::class, 'getAllAward']);
-    Route::middleware("permission:")->get("/{id}", [AwardController::class, 'getSingleAward']);
-    Route::middleware("permission:update-award")->put("/{id}", [AwardController::class, 'updateSingleAward']);
-    Route::middleware("permission:delete-award")->patch("/{id}", [AwardController::class, 'deleteSingleAward']);
-
-    Route::middleware('permission:create-cartOrder')->post("/", [CartOrderController::class, 'createSingleCartOrder']);
-    Route::middleware('permission:create-cartReOrder')->post("/reOrder", [CartOrderController::class, 'createReOrderForReturn']);
-    Route::middleware('permission:readAll-cartOrder')->get("/", [CartOrderController::class, 'getAllCartOrder']);
-    Route::middleware('permission:readSingle-cartOrder')->get("/{id}", [CartOrderController::class, 'getSingleCartOrder']);
-    Route::middleware('permission:update-cartOrder')->patch("/order", [CartOrderController::class, 'updateCartOrderStatus']);
-
-    Route::middleware('permission:create-cart')->post("/", [CartController::class, 'createCart']);
-    Route::middleware('permission:readAll-cart')->get("/", [CartController::class, 'getAllCart']);
-    Route::middleware('permission:readSingle-cart')->get("/customer/{id}", [CartController::class, 'getCartByUserId']);
-    Route::middleware('permission:readSingle-cart')->get("/{id}", [CartController::class, 'getSingleCart']);
-    Route::middleware('permission:readSingle-cart')->put("/cart-product/{id}", [CartController::class, 'updateSingleCartProduct']);
-
-    Route::get("/public", [ColorsController::class, 'getPublicColors']);
-
-    Route::middleware('permission:create-color')->post("/", [ColorsController::class, 'createSingleColors']);
-    Route::middleware('permission:readAll-color')->get("/", [ColorsController::class, 'getAllColors']);
-    Route::middleware('permission:readAll-color')->get("/{id}", [ColorsController::class, 'getSingleColors']);
-    Route::middleware('permission:update-color')->put("/{id}", [ColorsController::class, 'updateSingleColors']);
-    Route::middleware('permission:delete-color')->patch("/{id}", [ColorsController::class, 'deleteSingleColors']);
-
-    Route::middleware('permission:create-coupon')->post('/', [CouponController::class, 'createCoupon']);
-    Route::middleware('permission:readAll-coupon')->get('/', [CouponController::class, 'getAllCoupon']);
-    Route::middleware('permission:readAll-coupon')->get('/valid', [CouponController::class, 'getAllValidCoupon']);
-
-    Route::get('/valid/{coupon}', [CouponController::class, 'getSingleValidCoupon']);
-    Route::middleware('permission:readSingle-coupon')->get('/{id}', [CouponController::class, 'getSingleCoupon']);
-    Route::middleware('permission:update-coupon')->put('/{id}', [CouponController::class, 'updateSingleCoupon']);
-    Route::middleware('permission:delete-coupon')->patch('/{id}', [CouponController::class, 'deleteCoupon']);
-
-    Route::middleware('permission:create-courierMedium')->post("/", [CourierMediumController::class, 'createSingleCourierMedium']);
-    Route::middleware('permission:readAll-courierMedium')->get("/", [CourierMediumController::class, 'getAllCourierMedium']);
-    Route::middleware('permission:readAll-courierMedium')->get("/{id}", [CourierMediumController::class, 'getSingleCourierMedium']);
-    Route::middleware('permission:update-courierMedium')->put("/{id}", [CourierMediumController::class, 'updateSingleCourierMedium']);
-    Route::middleware('permission:delete-courierMedium')->patch("/{id}", [CourierMediumController::class, 'deleteSingleCourierMedium']);
-
-    Route::middleware(['permission:create-currency'])->post("/", [CurrencyController::class, 'createSingleCurrency']);
-
-    Route::middleware('permission:readAll-currency')->get("/", [CurrencyController::class, 'getAllCurrency']);
-    Route::middleware('permission:readSingle-currency')->get("/{id}", [CurrencyController::class, 'getSingleCurrency']);
-    Route::middleware(['permission:update-currency'])->put("/{id}", [CurrencyController::class, 'updateSingleCurrency']);
-    Route::middleware('permission:delete-currency')->patch("/{id}", [CurrencyController::class, 'deleteSingleCurrency']);
-
-    Route::post("/login", [CustomerController::class, 'customerLogin']);
-    Route::post("/logout", [CustomerController::class, 'Logout']);
-    Route::post("/", [CustomerController::class, 'createSingleCustomer']);
-    Route::post("/register", [CustomerController::class, 'registerCustomer']);
-
-    Route::middleware('permission:update-customer')->patch("/reset-password/{id}", [CustomerController::class, 'resetPassword']);
-    Route::middleware('permission:readSingle-customer')->get('/profile', [CustomerController::class, 'getProfile']);
-    Route::middleware('permission:update-customer')->put("/profile/update", [CustomerController::class, 'profileUpdate']);
-
-    Route::post("/request-forgot-password", [CustomerController::class, 'requestForgetPassword']);
-    Route::patch("/forgot-password", [CustomerController::class, 'forgotPassword']);
-
-    Route::middleware('permission:readAll-customer')->get("/", [CustomerController::class, 'getAllCustomer']);
-    Route::middleware('permission:readSingle-customer')->get("/{id}", [CustomerController::class, 'getSingleCustomer']);
-    Route::middleware('permission:update-customer', 'fileUploader:1')->put("/{id}", [CustomerController::class, 'updateSingleCustomer']);
-    Route::middleware('permission:delete-customer')->patch("/{id}", [CustomerController::class, 'deleteSingleCustomer']);
-
-    Route::get("/", [DashboardController::class, 'getDashboardData']);
-
-    Route::middleware('permission:create-deliveryChallan')->post('/', [DeliveryChallanController::class, 'createDeliveryChallan']);
-    Route::middleware('permission:readAll-deliveryChallan')->get('/',[DeliveryChallanController::class,'getAllDeliveryChallan']);
-    Route::middleware('permission:readSingle-deliveryChallan')->get('/{id}',[DeliveryChallanController::class,'getSingleDeliveryChallan']);
-    Route::middleware('permission:delete-deliveryChallan')->patch('/{id}',[DeliveryChallanController::class,'deleteDeliveryChallan']);
-
-    Route::middleware('permission:create-deliveryFee')->post('/',[DeliveryFeeController::class,'createDeliveryFee']);
-    Route::middleware('permission:readAll-deliveryFee')->get('/',[DeliveryFeeController::class,'getAllDeliveryFees']);
-    Route::middleware('permission:update-deliveryFee')->put('/{id}',[DeliveryFeeController::class,'updateDeliveryFee']);
-    Route::middleware('permission:delete-deliveryFee')->patch('/{id}',[DeliveryFeeController::class,'deleteDeliveryFee']);
-
-    Route::middleware('permission:create-department')->post("/", [DepartmentController::class, 'createSingleDepartment']);
-    Route::middleware('permission:readAll-department')->get("/", [departmentController::class, 'getAllDepartment']);
-    Route::middleware('permission:')->get('/{id}', [departmentController::class, 'getSingleDepartment']);
-    Route::middleware('permission:update-department')->put("/{id}", [departmentController::class, 'updateSingleDepartment']);
-    Route::middleware('permission:delete-department')->patch("/{id}", [departmentController::class, 'deletedDepartment']);
-
-    Route::middleware('permission:create-designationHistory')->post("/", [DesignationHistoryController::class, 'createSingleDesignationHistory']);
-    Route::middleware('permission:readAll-designationHistory')->get("/", [DesignationHistoryController::class, 'getAllDesignationHistory']);
-    Route::middleware('permission:readSingle-designationHistory')->get("/{id}", [DesignationHistoryController::class, 'getSingleDesignationHistory']);
-    Route::middleware('permission:update-designationHistory')->put("/{id}", [DesignationHistoryController::class, 'updateSingleDesignationHistory']);
-    Route::middleware('permission:delete-designationHistory')->delete("/{id}", [DesignationHistoryController::class, 'deleteSingleDesignationHistory']);
-
-    Route::middleware('permission:create-designation')->post("/", [DesignationController::class, 'createSingleDesignation']);
-    Route::middleware('permission:readAll-designation')->get("/", [DesignationController::class, 'getAllDesignation']);
-    Route::middleware('permission:readSingle-designation')->get("/{id}", [DesignationController::class, 'getSingleDesignation']);
-    Route::middleware('permission:update-designation')->put("/{id}", [DesignationController::class, 'updateSingleDesignation']);
-    Route::middleware('permission:delete-designation')->patch("/{id}", [DesignationController::class, 'deleteSingleDesignation']);
-
-//});
+// Modular route inclusion within the 'api' middleware group
+Route::prefix('user')->middleware('user')->group(base_path('routes/userRoutes.php'));
+Route::prefix('permission')->middleware('permission')->group(base_path('routes/permissionRoutes.php'));
+Route::prefix('role')->middleware('role')->group(base_path('routes/roleRoutes.php'));
+Route::prefix('setting')->middleware('setting')->group(base_path('routes/appSettingRoutes.php'));
+Route::prefix('account')->middleware('account')->group(base_path('routes/accountRoutes.php'));
+Route::prefix('transaction')->middleware('transaction')->group(base_path('routes/transactionRoutes.php'));
+Route::prefix('role-permission')->middleware('role-permission')->group(base_path('routes/rolePermissionRoutes.php'));
+Route::prefix('designation')->middleware('designation')->group(base_path('routes/designationRoutes.php'));
+Route::prefix('files')->middleware('files')->group(base_path('routes/filesRoutes.php'));
+Route::prefix('email-config')->middleware('email-config')->group(base_path('routes/emailConfigRoutes.php'));
+Route::prefix('email')->middleware('email')->group(base_path('routes/emailRoutes.php'));
+Route::prefix('dashboard')->middleware('dashboard')->group(base_path('routes/dashboardRoutes.php'));
+Route::prefix('product-category')->middleware('product-category')->group(base_path('routes/productCategoryRoutes.php'));
+Route::prefix('product-sub-category')->middleware('product-sub-category')->group(base_path('routes/productSubCategoryRoutes.php'));
+Route::prefix('product-vat')->middleware('product-vat')->group(base_path('routes/productVatRoutes.php'));
+Route::prefix('customer')->middleware('customer')->group(base_path('routes/customerRoutes.php'));
+Route::prefix('product-brand')->middleware('product-brand')->group(base_path('routes/productBrandRoutes.php'));
+Route::prefix('product')->middleware('product')->group(base_path('routes/productRoutes.php'));
+Route::prefix('product-color')->middleware('product-color')->group(base_path('routes/colorsRoutes.php'));
+Route::prefix('adjust-inventory')->middleware('adjust-inventory')->group(base_path('routes/adjustInventoryRoutes.php'));
+Route::prefix('supplier')->middleware('supplier')->group(base_path('routes/supplierRoutes.php'));
+Route::prefix('purchase-invoice')->middleware('purchase-invoice')->group(base_path('routes/purchaseInvoiceRoutes.php'));
+Route::prefix('payment-purchase-invoice')->middleware('payment-purchase-invoice')->group(base_path('routes/paymentPurchaseInvoiceRoutes.php'));
+Route::prefix('return-purchase-invoice')->middleware('return-purchase-invoice')->group(base_path('routes/returnPurchaseInvoiceRoutes.php'));
+Route::prefix('sale-invoice')->middleware('sale-invoice')->group(base_path('routes/saleInvoiceRoutes.php'));
+Route::prefix('payment-sale-invoice')->middleware('payment-sale-invoice')->group(base_path('routes/paymentSaleInvoiceRoutes.php'));
+Route::prefix('return-sale-invoice')->middleware('return-sale-invoice')->group(base_path('routes/returnSaleInvoiceRoutes.php'));
+Route::prefix('product-image')->middleware('product-image')->group(base_path('routes/productImageRoutes.php'));
+Route::prefix('report')->middleware('report')->group(base_path('routes/reportRoutes.php'));
+Route::prefix('reorder-quantity')->middleware('reorder-quantity')->group(base_path('routes/reorderQuantityRoutes.php'));
+Route::prefix('coupon')->middleware('coupon')->group(base_path('routes/couponRoutes.php'));
+Route::prefix('purchase-reorder-invoice')->middleware('purchase-reorder-invoice')->group(base_path('routes/purchaseReorderInvoiceRoutes.php'));
+Route::prefix('page-size')->middleware('page-size')->group(base_path('routes/pageSizeRoutes.php'));
+Route::prefix('quote')->middleware('quote')->group(base_path('routes/quoteRoutes.php'));
+Route::prefix('email-invoice')->middleware('email-invoice')->group(base_path('routes/sendEmailRoutes.php'));
+Route::prefix('shift')->middleware('shift')->group(base_path('routes/shiftRoutes.php'));
+Route::prefix('education')->middleware('education')->group(base_path('routes/educationRoutes.php'));
+Route::prefix('department')->middleware('department')->group(base_path('routes/departmentRoutes.php'));
+Route::prefix('designation-history')->middleware('designation-history')->group(base_path('routes/designationHistoryRoutes.php'));
+Route::prefix('employment-status')->middleware('employment-status')->group(base_path('routes/employmentStatusRoutes.php'));
+Route::prefix('salary-history')->middleware('salary-history')->group(base_path('routes/salaryHistoryRoutes.php'));
+Route::prefix('award')->middleware('award')->group(base_path('routes/awardRoutes.php'));
+Route::prefix('award-history')->middleware('award-history')->group(base_path('routes/awardHistoryRoutes.php'));
+Route::prefix('announcement')->middleware('announcement')->group(base_path('routes/announcementRoutes.php'));
+Route::prefix('shipping-time')->middleware('shipping-time')->group(base_path('routes/shippingTimeRoutes.php'));
+Route::prefix('shipping-charge')->middleware('shipping-charge')->group(base_path('routes/shippingChargeRoutes.php'));
+Route::prefix('discount')->middleware('discount')->group(base_path('routes/discountRoutes.php'));
+Route::prefix('courier-medium')->middleware('courier-medium')->group(base_path('routes/courierMediumRoutes.php'));
+Route::prefix('review-rating')->middleware('review-rating')->group(base_path('routes/ratingReviewRoutes.php'));
+Route::prefix('product-wishlist')->middleware('product-wishlist')->group(base_path('routes/productWishlistRoutes.php'));
+Route::prefix('currency')->middleware('currency')->group(base_path('routes/currencyRoutes.php'));
+Route::prefix('e-com-setting')->middleware('e-com-setting')->group(base_path('routes/eComSettingRoutes.php'));
+Route::prefix('product-reports')->middleware('product-reports')->group(base_path('routes/productReportRoutes.php'));
+Route::prefix('cart')->middleware('cart')->group(base_path('routes/cartRoutes.php'));
+Route::prefix('product-attribute')->middleware('product-attribute')->group(base_path('routes/productAttributeRoutes.php'));
+Route::prefix('product-attribute-value')->middleware('product-attribute-value')->group(base_path('routes/productAttributeValueRoutes.php'));
+Route::prefix('product-product-attribute-value')->middleware('product-product-attribute-value')->group(base_path('routes/productProductAttributeValueRoutes.php'));
+Route::prefix('slider-images')->middleware('slider-images')->group(base_path('routes/sliderImagesRoutes.php'));
+Route::prefix('slider-image')->middleware('slider-image')->group(base_path('routes/sliderImagesRoute.php'));
+Route::prefix('googlelogin')->middleware('googlelogin')->group(base_path('routes/googleLoginRoutes.php'));
+Route::prefix('cart-order')->middleware('cart-order')->group(base_path('routes/cartOrderRoutes.php'));
+Route::prefix('review-reply')->middleware('review-reply')->group(base_path('routes/reviewReplyRoutes.php'));
+Route::prefix('payment-method')->middleware('payment-method')->group(base_path('routes/paymentMethodRoutes.php'));
+Route::prefix('manual-payment')->middleware('manual-payment')->group(base_path('routes/manualPaymentRoutes.php'));
+Route::prefix('customer-profileImage')->middleware('customer-profileImage')->group(base_path('routes/customerProfileImageRoutes.php'));
+Route::prefix('return-cart-order')->middleware('return-cart-order')->group(base_path('routes/returnCartOrderRoutes.php'));
+Route::prefix('delivery-fee')->middleware('delivery-fee')->group(base_path('routes/deliveryFeeRoutes.php'));
+Route::prefix('terms-and-condition')->middleware('terms-and-condition')->group(base_path('routes/termsAndConditionRoutes.php'));
+Route::prefix('uom')->middleware('uom')->group(base_path('routes/uomRoutes.php'));
+Route::prefix('send-sms')->middleware('send-sms')->group(base_path('routes/sendSmsRoutes.php'));
+Route::prefix('delivery-challan')->middleware('delivery-challan')->group(base_path('routes/deliveryChallanRoutes.php'));
+Route::prefix('manufacturer')->middleware('manufacturer')->group(base_path('routes/manufacturerRoutes.php'));
+Route::prefix('weight-unit')->middleware('weight-unit')->group(base_path('routes/weightUnitRoutes.php'));
+Route::prefix('dimension-unit')->middleware('dimension-unit')->group(base_path('routes/dimensionUnitRoutes.php'));
