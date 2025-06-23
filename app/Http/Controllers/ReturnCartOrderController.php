@@ -385,7 +385,7 @@ class ReturnCartOrderController extends Controller
                 try {
                     $allReturnCartOrder = ReturnCartOrder::with('returnCartOrderProduct', 'cartOrder', 'cartOrder.customer:id,username')
                         ->orderBy('id', 'desc')
-                        
+
                         ->when($request->query('customerId'), function ($query) use ($request) {
                             return $query->whereHas('cartOrder.customer', function ($subQuery) use ($request) {
                                 $subQuery->where('id', $request->query('customerId'));
@@ -402,9 +402,9 @@ class ReturnCartOrderController extends Controller
                                 ->where('date', '<=', Carbon::createFromFormat('Y-m-d', $request->query('endDate')));
                         })
                         ->get();
-                    
 
-                    
+
+
 
 
                     $cartOrdersIds = $allReturnCartOrder->pluck('cartOrderId')->toArray();
