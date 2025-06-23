@@ -12,6 +12,7 @@ use App\Http\Controllers\ColorsController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CourierMediumController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\RefreshTokenController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -112,5 +113,22 @@ use Illuminate\Support\Facades\Route;
     Route::middleware('permission:readSingle-currency')->get("/{id}", [CurrencyController::class, 'getSingleCurrency']);
     Route::middleware(['permission:update-currency'])->put("/{id}", [CurrencyController::class, 'updateSingleCurrency']);
     Route::middleware('permission:delete-currency')->patch("/{id}", [CurrencyController::class, 'deleteSingleCurrency']);
+
+    Route::post("/login", [CustomerController::class, 'customerLogin']);
+    Route::post("/logout", [CustomerController::class, 'Logout']);
+    Route::post("/", [CustomerController::class, 'createSingleCustomer']);
+    Route::post("/register", [CustomerController::class, 'registerCustomer']);
+
+    Route::middleware('permission:update-customer')->patch("/reset-password/{id}", [CustomerController::class, 'resetPassword']);
+    Route::middleware('permission:readSingle-customer')->get('/profile', [CustomerController::class, 'getProfile']);
+    Route::middleware('permission:update-customer')->put("/profile/update", [CustomerController::class, 'profileUpdate']);
+
+    Route::post("/request-forgot-password", [CustomerController::class, 'requestForgetPassword']);
+    Route::patch("/forgot-password", [CustomerController::class, 'forgotPassword']);
+
+    Route::middleware('permission:readAll-customer')->get("/", [CustomerController::class, 'getAllCustomer']);
+    Route::middleware('permission:readSingle-customer')->get("/{id}", [CustomerController::class, 'getSingleCustomer']);
+    Route::middleware('permission:update-customer', 'fileUploader:1')->put("/{id}", [CustomerController::class, 'updateSingleCustomer']);
+    Route::middleware('permission:delete-customer')->patch("/{id}", [CustomerController::class, 'deleteSingleCustomer']);
 
 //});
