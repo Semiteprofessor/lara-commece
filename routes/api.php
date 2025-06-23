@@ -15,6 +15,8 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeliveryChallanController;
+use App\Http\Controllers\DeliveryFeeController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\RefreshTokenController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -139,5 +141,16 @@ use Illuminate\Support\Facades\Route;
     Route::middleware('permission:readAll-deliveryChallan')->get('/',[DeliveryChallanController::class,'getAllDeliveryChallan']);
     Route::middleware('permission:readSingle-deliveryChallan')->get('/{id}',[DeliveryChallanController::class,'getSingleDeliveryChallan']);
     Route::middleware('permission:delete-deliveryChallan')->patch('/{id}',[DeliveryChallanController::class,'deleteDeliveryChallan']);
+
+    Route::middleware('permission:create-deliveryFee')->post('/',[DeliveryFeeController::class,'createDeliveryFee']);
+    Route::middleware('permission:readAll-deliveryFee')->get('/',[DeliveryFeeController::class,'getAllDeliveryFees']);
+    Route::middleware('permission:update-deliveryFee')->put('/{id}',[DeliveryFeeController::class,'updateDeliveryFee']);
+    Route::middleware('permission:delete-deliveryFee')->patch('/{id}',[DeliveryFeeController::class,'deleteDeliveryFee']);
+
+    Route::middleware('permission:create-department')->post("/", [DepartmentController::class, 'createSingleDepartment']);
+    Route::middleware('permission:readAll-department')->get("/", [departmentController::class, 'getAllDepartment']);
+    Route::middleware('permission:')->get('/{id}', [departmentController::class, 'getSingleDepartment']);
+    Route::middleware('permission:update-department')->put("/{id}", [departmentController::class, 'updateSingleDepartment']);
+    Route::middleware('permission:delete-department')->patch("/{id}", [departmentController::class, 'deletedDepartment']);
 
 //});
