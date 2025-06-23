@@ -13,6 +13,8 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CourierMediumController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeliveryChallanController;
 use App\Http\Controllers\RefreshTokenController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -130,5 +132,12 @@ use Illuminate\Support\Facades\Route;
     Route::middleware('permission:readSingle-customer')->get("/{id}", [CustomerController::class, 'getSingleCustomer']);
     Route::middleware('permission:update-customer', 'fileUploader:1')->put("/{id}", [CustomerController::class, 'updateSingleCustomer']);
     Route::middleware('permission:delete-customer')->patch("/{id}", [CustomerController::class, 'deleteSingleCustomer']);
+
+    Route::get("/", [DashboardController::class, 'getDashboardData']);
+
+    Route::middleware('permission:create-deliveryChallan')->post('/', [DeliveryChallanController::class, 'createDeliveryChallan']);
+    Route::middleware('permission:readAll-deliveryChallan')->get('/',[DeliveryChallanController::class,'getAllDeliveryChallan']);
+    Route::middleware('permission:readSingle-deliveryChallan')->get('/{id}',[DeliveryChallanController::class,'getSingleDeliveryChallan']);
+    Route::middleware('permission:delete-deliveryChallan')->patch('/{id}',[DeliveryChallanController::class,'deleteDeliveryChallan']);
 
 //});
